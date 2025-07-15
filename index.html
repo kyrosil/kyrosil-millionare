@@ -22,12 +22,12 @@
                 <p class="subtitle" data-lang-key="subtitle">Supported by Burger King</p>
                 <p id="attempts-left" class="attempts-notice"></p>
                 
-                <div class="info-section">
+                <div class="info-section rules">
                     <h2 data-lang-key="rulesTitle">Oyun Kuralları</h2>
                     <p data-lang-key="rulesDesc">20 soruluk tarih maratonuna hoş geldiniz! Zorluğu giderek artan soruları ve zaman sınırını aşarak kilometre taşlarına ulaşın, muhteşem ödüller kazanın. 4 farklı joker hakkınız stratejinize güç katacak!</p>
                 </div>
                 
-                <div class="info-section">
+                <div class="info-section prizes">
                     <h2 data-lang-key="prizesTitle">Ödüller</h2>
                     <ul class="prize-list">
                         <li data-lang-key="prize5"><b>5. Soru:</b> Burger King'den Whopper Menü!</li>
@@ -38,6 +38,11 @@
                 </div>
 
                 <p class="language-notice" data-lang-key="langNotice">Türkiye'den katılan yarışmacıların <b>Türkçe</b>, Avrupa'dan katılanların ise <b>İngilizce</b> dilini seçmesi ödül kazanımı için zorunludur.</p>
+                
+                <div class="language-selector">
+                    <button id="lang-tr" class="lang-btn active" data-lang="tr">TÜRKÇE</button>
+                    <button id="lang-en" class="lang-btn" data-lang="en">ENGLISH</button>
+                </div>
 
                 <div id="form-container">
                     <input type="text" id="firstName" data-lang-placeholder="firstName" required>
@@ -57,51 +62,20 @@
                     </div>
                 </div>
                 <button id="start-button" class="btn" data-lang-key="startButton">OYUNU BAŞLAT</button>
-                <button id="language-toggle-intro" class="btn-lang">EN</button>
             </div>
         </div>
 
         <div id="game-screen" class="screen">
-            <div id="hud">
-                <div id="score">Puan: 0</div>
-                <div id="timer">00:00</div>
-                <div id="question-counter">Soru 1/20</div>
             </div>
-             <div id="progress-container">
-                <div id="progress-bar"></div>
-            </div>
-            <div id="joker-container">
-                <button class="joker-btn" id="joker-audience" disabled><span class="joker-icon">📊</span><span data-lang-key="jokerAudience">Seyirci</span></button>
-                <button class="joker-btn" id="joker-fifty" disabled><span class="joker-icon">50:50</span><span data-lang-key="jokerFifty">Yarı Yarıya</span></button>
-                <button class="joker-btn" id="joker-double" disabled><span class="joker-icon">x2</span><span data-lang-key="jokerDouble">Çift Cevap</span></button>
-                <button class="joker-btn" id="joker-skip" disabled><span class="joker-icon">⏭️</span><span data-lang-key="jokerSkip">Pas Geç</span></button>
-            </div>
-            <div id="question-box">
-                <p id="question-text"></p>
-                <div id="audience-chart" class="hidden">
-                    <div class="bar-container"><div class="bar"></div><span>A</span></div>
-                    <div class="bar-container"><div class="bar"></div><span>B</span></div>
-                    <div class="bar-container"><div class="bar"></div><span>C</span></div>
-                    <div class="bar-container"><div class="bar"></div><span>D</span></div>
-                </div>
-            </div>
-            <div id="answer-buttons"></div>
-            <p id="result-text"></p>
-            <button id="claim-reward-btn" class="btn hidden" data-lang-key="claimReward">Ödülünü Al!</button>
-        </div>
 
         <div id="end-screen" class="screen">
-            <h2 id="end-title" data-lang-key="congrats">Tebrikler!</h2>
-            <p id="final-score-text"></p>
-            <button id="restart-button" class="btn" data-lang-key="restartButton">Yeniden Başla</button>
-        </div>
+            </div>
         
         <footer class="game-footer">
             <a href="https://kyrosil.eu/" target="_blank">kyrosil.eu</a>
             <a href="https://www.burgerking.com.tr/" target="_blank" data-lang-key="bkWebsite">Burger King Türkiye</a>
         </footer>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
