@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. TÜM ELEMENTLERİ ÖNCEDEN BUL VE SAKLA ---
+    // --- 1. TÜM ELEMENTLERİ BUL VE SAKLA ---
     const elements = {};
     const elementIds = [ 'intro-screen', 'game-screen', 'end-screen', 'start-button', 'restart-button', 'lang-tr', 'lang-en', 'country-select', 'gsm', 'legal-consent', 'attempts-left', 'score', 'timer', 'question-counter', 'progress-bar', 'question-text', 'answer-buttons', 'result-text', 'claim-reward-btn', 'joker-audience', 'joker-fifty', 'joker-double', 'joker-skip', 'audience-chart', 'end-title', 'final-score-text', 'firstName', 'lastName', 'email', 'social' ];
     elementIds.forEach(id => {
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const uiTexts = { tr: { title: "Kyrosil ile Bil Kazan", subtitle: "Supported by Burger King", rulesTitle: "Oyun Kuralları", rulesDesc: "20 soruluk tarih maratonuna hoş geldiniz! Zorluğu giderek artan soruları ve zaman sınırını aşarak kilometre taşlarına ulaşın, muhteşem ödüller kazanın. 4 farklı joker hakkınız stratejinize güç katacak!", prizesTitle: "Ödüller", prize5: "<b>5. Soru:</b> Burger King'den Whopper Menü!", prize10: "<b>10. Soru:</b> BK'da geçerli 1000 TL / 20€ Bakiye!", prize15: "<b>15. Soru:</b> BK'da geçerli 5000 TL / 120€ Bakiye!", prize20: "<b>20. Soru:</b> 20.000 TL / 500€ Nakit Ödül!", langNotice: "Türkiye'den katılan yarışmacıların <b>Türkçe</b>, Avrupa'dan katılanların ise <b>İngilizce</b> dilini seçmesi ödül kazanımı için zorunludur.", firstName: "Adınız", lastName: "Soyadınız", email: "E-posta", social: "Sosyal Medya (Instagram veya EU Portal)", gsmTr: "Tıkla Gelsin'e Kayıtlı GSM Numaranız", consentTr: '<a href="#" target="_blank">KVKK Aydınlatma Metni\'ni</a> okudum, anladım ve kişisel verilerimin işlenmesini onaylıyorum.', startButton: "OYUNU BAŞLAT", score: "Puan", question: "Soru", correct: "Doğru!", wrong: "Yanlış!", timeUp: "Süre Doldu!", jokerAudience: "Seyirci", jokerFifty: "Yarı Yarıya", jokerDouble: "Çift Cevap", jokerSkip: "Pas Geç", claimReward: "Ödülünü Al!", congrats: "Tebrikler!", finalScore: "Final Puanınız", restartButton: "Yeniden Başla", endGameLost: "Neredeyse Başarıyordun!", bkWebsite: "Burger King Türkiye", noAttempts: "HAKKINIZ BİTTİ", comeback: "Yarın tekrar bekleriz!", attemptsLeft: "Bugünkü Katılım Hakkın:" }, en: { title: "Know and Win with Kyrosil", subtitle: "Supported by Burger King", rulesTitle: "Game Rules", rulesDesc: "Welcome to the 20-question history marathon! Answer progressively harder questions correctly, pass milestones, and win amazing prizes. Your 4 different jokers will empower your strategy!", prizesTitle: "Prizes", prize5: "<b>Question 5:</b> A Whopper Menu from Burger King!", prize10: "<b>Question 10:</b> 1000 TL / 20€ Balance at BK!", prize15: "<b>Question 15:</b> 5000 TL / 120€ Balance at BK!", prize20: "<b>Question 20:</b> 20,000 TL / 500€ Cash Prize!", langNotice: "Participants from Turkey are required to select <b>Turkish</b>, and participants from Europe are required to select the <b>English</b> language to be eligible for prizes.", firstName: "First Name", lastName: "Last Name", email: "Email", social: "Social Media (Instagram or EU Portal)", gsmEn: "GSM Number Registered to Burger King App", consentEn: 'I have read and understood the <a href="#" target="_blank">GDPR Policy</a> and I consent to the processing of my personal data.', startButton: "START GAME", score: "Score", question: "Question", correct: "Correct!", wrong: "Wrong!", timeUp: "Time's Up!", jokerAudience: "Audience", jokerFifty: "50:50", jokerDouble: "Double Answer", jokerSkip: "Skip", claimReward: "Claim Your Prize!", congrats: "Congratulations!", finalScore: "Your Final Score", restartButton: "Restart Game", endGameLost: "Could Be Better!", bkWebsite: "Burger King Global", noAttempts: "NO ATTEMPTS LEFT", comeback: "Come back tomorrow!", attemptsLeft: "Attempts Left Today:" } };
     const europeanCountries = ["Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Ukraine", "United Kingdom", "Vatican City"];
 
-    // --- 3. FONKSİYONLARI TANIMLA ---
+    // --- 3. TÜM FONKSİYONLARI TANIMLA ---
     
     function renderUIForLanguage(lang) {
         state.currentLanguage = lang;
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
         for (let input of inputs) {
-            if (!input.value.trim()) {
+            if (!input || !input.value.trim()) {
                 alert(state.currentLanguage === 'tr' ? 'Lütfen tüm alanları doldurun.' : 'Please fill all fields.');
                 return false;
             }
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetGameState();
         loadNextQuestion();
     }
-    
+
     function loadNextQuestion() {
         clearInterval(state.timerInterval);
         elements.claimRewardBtn.classList.add('hidden');
@@ -343,10 +343,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
+    // --- 4. UYGULAMAYI BAŞLAT ---
     async function main() {
-        cacheDOMElements();
-        
-        // Listener'ları güvenli bir şekilde ata
+        // Olay dinleyicilerini ata
         elements.langTr.addEventListener('click', () => renderUIForLanguage('tr'));
         elements.langEn.addEventListener('click', () => renderUIForLanguage('en'));
         elements.startButton.addEventListener('click', startGame);
@@ -357,6 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.jokerSkipBtn.addEventListener('click', useSkipJoker);
         elements.claimRewardBtn.addEventListener('click', handleClaimReward);
         
+        // Statik verileri doldur
         europeanCountries.forEach(country => {
             const option = document.createElement('option');
             option.value = country;
@@ -364,12 +364,13 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.countrySelect.appendChild(option);
         });
 
+        // Verileri yükle ve UI'yı ilk kez çiz
         try {
             await loadQuestions();
             renderUIForLanguage('tr');
         } catch(error) {
             console.error("Uygulama başlatılamadı:", error);
-            document.body.innerHTML = "Oyun başlatılırken bir hata oluştu.";
+            document.body.innerHTML = "Oyun başlatılırken kritik bir hata oluştu.";
         }
     }
 
