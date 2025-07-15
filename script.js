@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         double: false, skip: false
     };
 
-    // ---- DİL VE METİN VERİLERİ (GÜNCELLENDİ) ---- //
     const uiTexts = {
         tr: {
             title: "Kyrosil ile Bil Kazan", subtitle: "Supported by Burger King",
@@ -56,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             prize15: "<b>15. Soru:</b> BK'da geçerli 5000 TL / 120€ Bakiye!",
             prize20: "<b>20. Soru:</b> 20.000 TL / 500€ Nakit Ödül!",
             langNotice: "Türkiye'den katılan yarışmacıların <b>Türkçe</b>, Avrupa'dan katılanların ise <b>İngilizce</b> dilini seçmesi ödül kazanımı için zorunludur.",
-            firstName: "Adınız", lastName: "Soyadınız", email: "E-posta", social: "Sosyal Medya (Instagram veya EU Portal)", // GÜNCELLENDİ
+            firstName: "Adınız", lastName: "Soyadınız", email: "E-posta", social: "Sosyal Medya (Instagram veya EU Portal)",
             gsmTr: "Tıkla Gelsin'e Kayıtlı GSM Numaranız",
             consentTr: '<a href="#" target="_blank">KVKK Aydınlatma Metni\'ni</a> okudum, anladım ve kişisel verilerimin işlenmesini onaylıyorum.',
             startButton: "OYUNU BAŞLAT",
@@ -81,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             prize15: "<b>Question 15:</b> 5000 TL / 120€ Balance at BK!",
             prize20: "<b>Question 20:</b> 20,000 TL / 500€ Cash Prize!",
             langNotice: "Participants from Turkey are required to select <b>Turkish</b>, and participants from Europe are required to select the <b>English</b> language to be eligible for prizes.",
-            firstName: "First Name", lastName: "Last Name", email: "Email", social: "Social Media (Instagram or EU Portal)", // GÜNCELLENDİ
+            firstName: "First Name", lastName: "Last Name", email: "Email", social: "Social Media (Instagram or EU Portal)",
             gsmEn: "GSM Number Registered to Burger King App",
             consentEn: 'I have read and understood the <a href="#" target="_blank">GDPR Policy</a> and I consent to the processing of my personal data.',
             startButton: "START GAME",
@@ -100,19 +99,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const europeanCountries = ["Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Ukraine", "United Kingdom", "Vatican City"];
 
-    // ---- ANA FONKSİYONLAR (GÜNCELLENMİŞ BAŞLATMA SIRASI) ---- //
+    // ---- ANA FONKSİYONLAR---- //
     
     async function init() {
-        populateCountries();
         addEventListeners();
+        populateCountries();
         await loadQuestions();
-        // Dil ve UI ile ilgili her şeyin en sonda ve tek bir yerden çağrılması hatayı önler
-        setLanguage(currentLanguage, true); // `true` parametresi başlangıç olduğunu belirtir
+        renderUIForLanguage('tr'); // Sayfa ilk yüklendiğinde TÜRKÇE olarak başla
     }
     
     function addEventListeners() {
-        langBtnTr.addEventListener('click', () => setLanguage('tr'));
-        langBtnEn.addEventListener('click', () => setLanguage('en'));
+        langBtnTr.addEventListener('click', () => renderUIForLanguage('tr'));
+        langBtnEn.addEventListener('click', () => renderUIForLanguage('en'));
         startButton.addEventListener('click', startGame);
         restartButton.addEventListener('click', () => location.reload());
         jokerAudienceBtn.addEventListener('click', useAudienceJoker);
@@ -121,6 +119,49 @@ document.addEventListener('DOMContentLoaded', () => {
         jokerSkipBtn.addEventListener('click', useSkipJoker);
         claimRewardBtn.addEventListener('click', handleClaimReward);
     }
+
+    // ---- GÜNCELLENMİŞ ARAYÜZ YENİLEME FONKSİYONU ---- //
+    function renderUIForLanguage(lang) {
+        currentLanguage = lang;
+        const texts = uiTexts[currentLanguage];
+
+        // Dil butonlarının aktif durumunu ayarla
+        if (lang === 'tr') {
+            langBtnTr.classList.add('active');
+            langBtnEn.classList.remove('active');
+        } else {
+            langBtnEn.classList.add('active');
+            langBtnTr.classList.remove('active');
+        }
+
+        // Tüm metinleri güncelle
+        document.title = texts.title;
+        document.querySelectorAll('[data-lang-key]').forEach(el => {
+            const key = el.dataset.langKey;
+            if (texts[key]) el.innerHTML = texts[key];
+        });
+        document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
+            const key = el.dataset.langPlaceholder;
+            if (texts[key]) el.placeholder = texts[key];
+        });
+
+        // Dile özel form elemanlarını ve linkleri ayarla
+        if (currentLanguage === 'en') {
+            countrySelect.classList.remove('hidden');
+            gsmInput.placeholder = texts.gsmEn;
+            consentLabel.innerHTML = texts.consentEn;
+            bkWebsiteLink.href = "https://www.bk.com/";
+        } else {
+            countrySelect.classList.add('hidden');
+            gsmInput.placeholder = texts.gsmTr;
+            consentLabel.innerHTML = texts.consentTr;
+            bkWebsiteLink.href = "https://www.burgerking.com.tr/";
+        }
+        
+        // En son katılım hakkını kontrol et ve metnini ayarla
+        checkDailyAttempts();
+    }
+
 
     // ---- GÜNLÜK KATILIM HAKKI MANTIĞI ---- //
     function checkDailyAttempts() {
@@ -182,42 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => endGame(false), 2000);
     }
 
-    // ---- DİL VE UI (GÜNCELLENDİ) ---- //
-    function setLanguage(lang, isInitial = false) {
-        if (!isInitial && lang === currentLanguage) return; // Zaten seçili dili tekrar seçerse bir şey yapma
-        currentLanguage = lang;
-        updateLanguageUI();
-        checkDailyAttempts(); // Dil değişince metinleri de güncellemek için
-    }
-
-    function updateLanguageUI() {
-        const texts = uiTexts[currentLanguage];
-        document.title = texts.title;
-        document.querySelectorAll('[data-lang-key]').forEach(el => {
-            const key = el.dataset.langKey;
-            if (texts[key]) el.innerHTML = texts[key];
-        });
-        document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
-            const key = el.dataset.langPlaceholder;
-            if (texts[key]) el.placeholder = texts[key];
-        });
-        if (currentLanguage === 'tr') {
-            langBtnTr.classList.add('active');
-            langBtnEn.classList.remove('active');
-            countrySelect.classList.add('hidden');
-            gsmInput.placeholder = texts.gsmTr;
-            consentLabel.innerHTML = texts.consentTr;
-            bkWebsiteLink.href = "https://www.burgerking.com.tr/";
-        } else {
-            langBtnEn.classList.add('active');
-            langBtnTr.classList.remove('active');
-            countrySelect.classList.remove('hidden');
-            gsmInput.placeholder = texts.gsmEn;
-            consentLabel.innerHTML = texts.consentEn;
-            bkWebsiteLink.href = "https://www.bk.com/";
-        }
-    }
-
     function populateCountries() {
         europeanCountries.forEach(country => {
             const option = document.createElement('option');
@@ -242,6 +247,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const pool = allQuestions[levelKey][currentLanguage];
                 if (pool && Array.isArray(pool)) {
                     shuffledQuestionPools[levelKey] = [...pool].sort(() => Math.random() - 0.5);
+                } else {
+                    console.error(`Error: Soru havuzu bulunamadı veya dizi değil: ${levelKey} - ${currentLanguage}`);
                 }
             }
         }
@@ -265,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function validateForm() {
         const inputs = [document.getElementById('firstName'), document.getElementById('lastName'), document.getElementById('email'), document.getElementById('social'), gsmInput];
         if (currentLanguage === 'en') {
-             if (!countrySelect.value) { // Ülke seçimi kontrolü
+             if (!countrySelect.value) {
                 alert('Please select your country.');
                 return false;
              }
@@ -300,7 +307,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const levelKey = `seviye${level}`;
 
         if (!shuffledQuestionPools[levelKey] || !shuffledQuestionPools[levelKey][questionInLevelIndex]) {
-            endGame(true);
+            console.error("KRİTİK HATA: Bu seviye için soru verisi bulunamadı. Oyunu sonlandır.", {levelKey, questionInLevelIndex, shuffledPools: shuffledQuestionPools});
+            alert("Kritik bir hata oluştu ve oyun devam edemiyor. Lütfen sayfayı yenileyin.");
+            endGame(totalQuestionIndex >= 20); // Eğer son soruya ulaştıysa kazandı say
             return;
         }
 
@@ -499,6 +508,8 @@ document.addEventListener('DOMContentLoaded', () => {
         score += 25;
         handleCorrectAnswerFlow();
     }
+
+
 
     function handleClaimReward() {
         const milestone = totalQuestionIndex;
