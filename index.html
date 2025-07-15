@@ -49,14 +49,13 @@
                     <input type="text" id="lastName" data-lang-placeholder="lastName" required>
                     <input type="email" id="email" data-lang-placeholder="email" required>
                     <input type="text" id="social" data-lang-placeholder="social" required>
-                    <select id="country-select" class="hidden">
-                        </select>
+                    <select id="country-select" class="hidden"></select>
                     <input type="tel" id="gsm" data-lang-placeholder="gsmTr" required>
                     <div class="legal-checkbox">
                         <input type="checkbox" id="legal-consent" required>
                         <label for="legal-consent">
                             <span data-lang-key="consentTr">
-                                <a href="#" target="_blank">KVKK Aydınlatma Metni'ni</a> okudum, anladım ve kişisel verilerimin işlenmesini onaylıyorum.
+                                <a href="#" target="_blank">KVKK Aydınlatma Metni'ni</a> okudum.
                             </span>
                         </label>
                     </div>
@@ -66,10 +65,39 @@
         </div>
 
         <div id="game-screen" class="screen">
+            <div id="hud">
+                <div id="score">Puan: 0</div>
+                <div id="timer">00:00</div>
+                <div id="question-counter">Soru 1/20</div>
             </div>
+             <div id="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div id="joker-container">
+                <button class="joker-btn" id="joker-audience" disabled><span class="joker-icon">📊</span><span data-lang-key="jokerAudience">Seyirci</span></button>
+                <button class="joker-btn" id="joker-fifty" disabled><span class="joker-icon">50:50</span><span data-lang-key="jokerFifty">Yarı Yarıya</span></button>
+                <button class="joker-btn" id="joker-double" disabled><span class="joker-icon">x2</span><span data-lang-key="jokerDouble">Çift Cevap</span></button>
+                <button class="joker-btn" id="joker-skip" disabled><span class="joker-icon">⏭️</span><span data-lang-key="jokerSkip">Pas Geç</span></button>
+            </div>
+            <div id="question-box">
+                <p id="question-text"></p>
+                <div id="audience-chart" class="hidden">
+                    <div class="bar-container"><div class="bar"></div><span>A</span></div>
+                    <div class="bar-container"><div class="bar"></div><span>B</span></div>
+                    <div class="bar-container"><div class="bar"></div><span>C</span></div>
+                    <div class="bar-container"><div class="bar"></div><span>D</span></div>
+                </div>
+            </div>
+            <div id="answer-buttons"></div>
+            <p id="result-text"></p>
+            <button id="claim-reward-btn" class="btn hidden" data-lang-key="claimReward">Ödülünü Al!</button>
+        </div>
 
         <div id="end-screen" class="screen">
-            </div>
+            <h2 id="end-title" data-lang-key="congrats">Tebrikler!</h2>
+            <p id="final-score-text"></p>
+            <button id="restart-button" class="btn" data-lang-key="restartButton">Yeniden Başla</button>
+        </div>
         
         <footer class="game-footer">
             <a href="https://kyrosil.eu/" target="_blank">kyrosil.eu</a>
