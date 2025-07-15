@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         double: false, skip: false
     };
 
+    // ---- DİL VE METİN VERİLERİ (GÜNCELLENDİ) ---- //
     const uiTexts = {
         tr: {
             title: "Kyrosil ile Bil Kazan", subtitle: "Supported by Burger King",
@@ -55,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
             prize15: "<b>15. Soru:</b> BK'da geçerli 5000 TL / 120€ Bakiye!",
             prize20: "<b>20. Soru:</b> 20.000 TL / 500€ Nakit Ödül!",
             langNotice: "Türkiye'den katılan yarışmacıların <b>Türkçe</b>, Avrupa'dan katılanların ise <b>İngilizce</b> dilini seçmesi ödül kazanımı için zorunludur.",
-            firstName: "Adınız", lastName: "Soyadınız", email: "E-posta", social: "Sosyal Medya (Instagram vb.)",
+            firstName: "Adınız", lastName: "Soyadınız", email: "E-posta", social: "Sosyal Medya (Instagram veya EU Portal)", // GÜNCELLENDİ
             gsmTr: "Tıkla Gelsin'e Kayıtlı GSM Numaranız",
             consentTr: '<a href="#" target="_blank">KVKK Aydınlatma Metni\'ni</a> okudum, anladım ve kişisel verilerimin işlenmesini onaylıyorum.',
             startButton: "OYUNU BAŞLAT",
@@ -80,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
             prize15: "<b>Question 15:</b> 5000 TL / 120€ Balance at BK!",
             prize20: "<b>Question 20:</b> 20,000 TL / 500€ Cash Prize!",
             langNotice: "Participants from Turkey are required to select <b>Turkish</b>, and participants from Europe are required to select the <b>English</b> language to be eligible for prizes.",
-            firstName: "First Name", lastName: "Last Name", email: "Email", social: "Social Media (e.g., Instagram)",
+            firstName: "First Name", lastName: "Last Name", email: "Email", social: "Social Media (Instagram or EU Portal)", // GÜNCELLENDİ
             gsmEn: "GSM Number Registered to Burger King App",
             consentEn: 'I have read and understood the <a href="#" target="_blank">GDPR Policy</a> and I consent to the processing of my personal data.',
             startButton: "START GAME",
@@ -99,14 +100,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const europeanCountries = ["Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Ukraine", "United Kingdom", "Vatican City"];
 
+    // ---- ANA FONKSİYONLAR (GÜNCELLENMİŞ BAŞLATMA SIRASI) ---- //
+    
     async function init() {
         populateCountries();
-        await loadQuestions();
         addEventListeners();
-        updateLanguageUI();
-        checkDailyAttempts();
+        await loadQuestions();
+        // Dil ve UI ile ilgili her şeyin en sonda ve tek bir yerden çağrılması hatayı önler
+        setLanguage(currentLanguage, true); // `true` parametresi başlangıç olduğunu belirtir
     }
-
+    
     function addEventListeners() {
         langBtnTr.addEventListener('click', () => setLanguage('tr'));
         langBtnEn.addEventListener('click', () => setLanguage('en'));
@@ -119,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         claimRewardBtn.addEventListener('click', handleClaimReward);
     }
 
+    // ---- GÜNLÜK KATILIM HAKKI MANTIĞI ---- //
     function checkDailyAttempts() {
         const today = new Date().toISOString().slice(0, 10);
         let attemptsData = JSON.parse(localStorage.getItem('kyrosilQuizData')) || { date: '', count: 0 };
@@ -137,13 +141,14 @@ document.addEventListener('DOMContentLoaded', () => {
             startButton.textContent = uiTexts[currentLanguage].startButton;
         }
     }
-
+    
     function recordAttempt() {
         let attemptsData = JSON.parse(localStorage.getItem('kyrosilQuizData'));
         attemptsData.count++;
         localStorage.setItem('kyrosilQuizData', JSON.stringify(attemptsData));
     }
 
+    // ---- ZAMANLAYICI MANTIĞI ---- //
     function startTimer() {
         clearInterval(timerInterval);
         const level = Math.floor(totalQuestionIndex / 5);
@@ -170,17 +175,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 1000);
     }
-
+    
     function handleTimeUp() {
         resultTextDisplay.textContent = uiTexts[currentLanguage].timeUp;
         revealAnswers(-1);
         setTimeout(() => endGame(false), 2000);
     }
 
-    function setLanguage(lang) {
+    // ---- DİL VE UI (GÜNCELLENDİ) ---- //
+    function setLanguage(lang, isInitial = false) {
+        if (!isInitial && lang === currentLanguage) return; // Zaten seçili dili tekrar seçerse bir şey yapma
         currentLanguage = lang;
         updateLanguageUI();
-        checkDailyAttempts();
+        checkDailyAttempts(); // Dil değişince metinleri de güncellemek için
     }
 
     function updateLanguageUI() {
@@ -220,6 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ---- OYUN AKIŞI (GÜNCELLENDİ) ---- //
     async function loadQuestions() {
         try {
             const response = await fetch('questions.json');
@@ -230,25 +238,38 @@ document.addEventListener('DOMContentLoaded', () => {
     function shuffleAllPools() {
         shuffledQuestionPools = {};
         for (const levelKey in allQuestions) {
-            const pool = allQuestions[levelKey][currentLanguage];
-            shuffledQuestionPools[levelKey] = [...pool].sort(() => Math.random() - 0.5);
+            if (allQuestions.hasOwnProperty(levelKey)) {
+                const pool = allQuestions[levelKey][currentLanguage];
+                if (pool && Array.isArray(pool)) {
+                    shuffledQuestionPools[levelKey] = [...pool].sort(() => Math.random() - 0.5);
+                }
+            }
         }
     }
 
     function startGame() {
+        if (startButton.disabled) return;
         if (!validateForm()) return;
+        
         recordAttempt();
         checkDailyAttempts();
         shuffleAllPools();
+
         introScreen.classList.remove('active');
         gameScreen.classList.add('active');
+        
         resetGameState();
         loadNextQuestion();
     }
 
     function validateForm() {
         const inputs = [document.getElementById('firstName'), document.getElementById('lastName'), document.getElementById('email'), document.getElementById('social'), gsmInput];
-        if (currentLanguage === 'en') inputs.push(countrySelect);
+        if (currentLanguage === 'en') {
+             if (!countrySelect.value) { // Ülke seçimi kontrolü
+                alert('Please select your country.');
+                return false;
+             }
+        }
         for (let input of inputs) {
             if (!input.value) {
                 alert(currentLanguage === 'tr' ? 'Lütfen tüm alanları doldurun.' : 'Please fill all fields.');
@@ -273,14 +294,18 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(timerInterval);
         claimRewardBtn.classList.add('hidden');
         isDoubleAnswerActive = false;
+        
         const level = Math.floor(totalQuestionIndex / 5) + 1;
         const questionInLevelIndex = totalQuestionIndex % 5;
         const levelKey = `seviye${level}`;
-        currentQuestionData = shuffledQuestionPools[levelKey]?.[questionInLevelIndex];
-        if (!currentQuestionData) {
+
+        if (!shuffledQuestionPools[levelKey] || !shuffledQuestionPools[levelKey][questionInLevelIndex]) {
             endGame(true);
             return;
         }
+
+        currentQuestionData = shuffledQuestionPools[levelKey][questionInLevelIndex];
+        
         displayQuestion();
         updateHUD();
         startTimer();
@@ -304,27 +329,31 @@ document.addEventListener('DOMContentLoaded', () => {
     function selectAnswer(selectedIndex) {
         clearInterval(timerInterval);
         const isCorrect = selectedIndex === currentQuestionData.correct;
+        
         if (isDoubleAnswerActive) {
-            isDoubleAnswerActive = false;
-            jokers.double = false;
-            updateJokerUI();
             handleSecondAnswer(selectedIndex);
             return;
         }
+        
         if (jokers.double && !isCorrect) {
             isDoubleAnswerActive = true;
+            jokers.double = false;
+            updateJokerUI();
             const buttons = answerButtonsContainer.querySelectorAll('.answer-btn');
             buttons[selectedIndex].classList.add('wrong');
             buttons[selectedIndex].disabled = true;
             return;
         }
+        
         revealAnswers(selectedIndex);
+        
         if (isCorrect) {
             score += 50;
             resultTextDisplay.textContent = uiTexts[currentLanguage].correct;
         } else {
             resultTextDisplay.textContent = uiTexts[currentLanguage].wrong;
         }
+        
         setTimeout(() => {
             if (isCorrect) {
                 handleCorrectAnswerFlow();
@@ -411,7 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateJokerUI();
         audienceChart.classList.remove('hidden');
         const bars = audienceChart.querySelectorAll('.bar-container .bar');
-        let percentages = [10, 10, 10, 10];
+        let percentages = [0, 0, 0, 0];
         const isLucky = Math.random() < 0.95;
         let highIndex = currentQuestionData.correct;
         if (!isLucky) {
@@ -423,18 +452,16 @@ document.addEventListener('DOMContentLoaded', () => {
         percentages[highIndex] = highValue;
         remainingPercent -= highValue;
         let otherIndices = [0, 1, 2, 3].filter(i => i !== highIndex);
-        otherIndices.forEach((index, i) => {
-            if (i < 2) {
-                let randomPercent = 1 + Math.floor(Math.random() * (remainingPercent / 2));
-                percentages[index] = randomPercent;
-                remainingPercent -= randomPercent;
-            } else {
-                percentages[index] = remainingPercent;
-            }
-        });
+        otherIndices.sort(() => Math.random() - 0.5);
+        percentages[otherIndices[0]] = Math.floor(Math.random() * remainingPercent);
+        remainingPercent -= percentages[otherIndices[0]];
+        percentages[otherIndices[1]] = Math.floor(Math.random() * remainingPercent);
+        remainingPercent -= percentages[otherIndices[1]];
+        percentages[otherIndices[2]] = remainingPercent;
+        
         bars.forEach((bar, index) => {
             const barLabel = bar.parentElement.querySelector('span');
-            bar.style.height = `0%`; // Reset first
+            bar.style.height = `0%`;
             setTimeout(() => {
                  bar.style.height = `${percentages[index]}%`;
                  if (barLabel) barLabel.textContent = `${percentages[index]}%`;
