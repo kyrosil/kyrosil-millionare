@@ -1,5 +1,141 @@
-/* ... Önceki CSS kodunun tamamı buraya gelecek ... */
+:root {
+    --bg-dark: #1a1a2e;
+    --bg-medium: #16213e;
+    --primary: #0f3460;
+    --accent: #533483;
+    --correct: #0e6b0e;
+    --wrong: #a83232;
+    --text-light: #e94560;
+    --text-white: #ffffff;
+    --gold: #ffd700;
+    --disabled-grey: #555;
+    --font-primary: 'Montserrat', sans-serif;
+    --font-secondary: 'Roboto', sans-serif;
+}
 
+body {
+    font-family: var(--font-secondary);
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    margin: 0;
+    padding-top: 100px; /* Yapışkan header için boşluk */
+}
+
+#game-container {
+    width: 90%;
+    max-width: 900px;
+    margin: 20px auto;
+    background-color: var(--bg-medium);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    padding: 0 30px 20px 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    border: 2px solid var(--primary);
+}
+
+/* Header & Footer */
+.game-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 15px;
+    border-bottom: 1px solid var(--primary);
+    width: 100%;
+    max-width: 964px; /* game-container + padding + border */
+    box-sizing: border-box;
+    position: fixed; /* Yapışkan Header */
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--bg-medium);
+    z-index: 1000;
+}
+.logo {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--text-white);
+}
+.game-footer {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 15px;
+    margin-top: auto;
+    border-top: 1px solid var(--primary);
+    font-size: 14px;
+}
+.game-footer a { color: var(--text-white); text-decoration: none; transition: color 0.3s; }
+.game-footer a:hover { color: var(--gold); }
+
+/* Ekran Yönetimi */
+.screen { display: none; flex-direction: column; align-items: center; width: 100%; animation: fadeIn 0.5s ease-in-out; }
+.screen.active { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.hidden { display: none !important; }
+
+/* Giriş Ekranı (Kaydırma çubuğu kaldırıldı) */
+.intro-content { width: 100%; padding-top: 20px; }
+.title { font-family: var(--font-primary); color: var(--text-light); font-size: 2.2rem; margin: 10px 0 0; }
+.subtitle { margin: 0 0 15px; font-size: 1.1rem; color: #ccc; }
+.attempts-notice { font-size: 1rem; font-weight: 700; background-color: var(--accent); padding: 8px; border-radius: 5px; }
+.info-section { background-color: var(--bg-dark); padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: left; }
+.info-section h2 { font-family: var(--font-primary); color: var(--gold); margin: 0 0 10px; border-bottom: 1px solid var(--primary); padding-bottom: 5px; }
+.prize-list { list-style: none; padding: 0; margin: 0; }
+.prize-list li { margin-bottom: 8px; }
+.language-notice { background-color: var(--text-light); color: var(--text-white); padding: 10px; border-radius: 5px; font-weight: 500; margin: 15px 0; }
+
+#form-container { display: flex; flex-direction: column; width: 100%; gap: 12px; margin: 20px 0; }
+#form-container input, #form-container select { padding: 14px; border-radius: 8px; border: 1px solid var(--primary); background-color: var(--bg-dark); color: var(--text-white); font-size: 16px; font-family: var(--font-secondary); }
+.legal-checkbox { display: flex; align-items: center; gap: 10px; font-size: 14px; text-align: left; }
+.legal-checkbox a { color: var(--gold); text-decoration: underline; }
+
+.btn { width: 100%; padding: 15px; font-size: 18px; font-family: var(--font-primary); font-weight: 700; border: none; border-radius: 10px; cursor: pointer; transition: transform 0.2s, background-color 0.2s; background-color: var(--correct); color: var(--text-white); margin-top: 10px; }
+.btn:hover:not(:disabled) { transform: scale(1.02); }
+.btn:disabled { background-color: var(--disabled-grey); cursor: not-allowed; }
+.btn-lang { margin-top: 15px; padding: 8px 18px; background-color: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; font-family: var(--font-primary); font-weight: 700; }
+
+/* Oyun Ekranı */
+#hud { display: flex; justify-content: space-between; align-items: center; width: 100%; margin: 15px 0 10px; font-size: 1.1rem; font-weight: 700; }
+#timer { font-family: var(--font-primary); font-size: 1.5rem; color: var(--gold); transition: color 0.5s, transform 0.5s; }
+#timer.low-time { color: var(--text-light); transform: scale(1.1); animation: pulse 1s infinite; }
+@keyframes pulse { 0% { transform: scale(1.1); } 50% { transform: scale(1.2); } 100% { transform: scale(1.1); } }
+#progress-container { width: 100%; height: 10px; background-color: var(--primary); border-radius: 10px; overflow: hidden; margin-bottom: 15px; }
+#progress-bar { width: 0%; height: 100%; background-color: var(--gold); transition: width 0.5s; }
+#joker-container { display: flex; justify-content: space-around; width: 100%; margin-bottom: 15px; gap: 10px; }
+.joker-btn { flex: 1; padding: 8px; background-color: var(--accent); border: 1px solid #fff; color: #fff; border-radius: 8px; cursor: pointer; transition: background-color 0.3s, opacity 0.3s; }
+.joker-btn:disabled { background-color: var(--disabled-grey); opacity: 0.5; cursor: not-allowed; }
+
+#question-box { width: 100%; min-height: 120px; padding: 20px; box-sizing: border-box; background-color: var(--bg-dark); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: clamp(18px, 4vw, 22px); font-weight: 500; margin-bottom: 15px; position: relative; }
+#answer-buttons { width: 100%; display: grid; grid-template-columns: 1fr; gap: 10px; }
+.answer-btn { background-color: var(--primary); width: 100%; padding: 15px; border-radius: 8px; color: var(--text-white); border: 1px solid transparent; cursor: pointer; font-size: 16px; text-align: center; transition: background-color 0.3s, border-color 0.3s; }
+.answer-btn:hover:not(:disabled) { background-color: var(--accent); }
+.answer-btn.selected { border-color: var(--gold); }
+.answer-btn.correct { background-color: var(--correct) !important; }
+.answer-btn.wrong { background-color: var(--wrong) !import ant; }
+.answer-btn.hidden-by-joker { visibility: hidden; }
+
+#result-text { margin-top: 15px; font-size: 24px; font-weight: bold; height: 30px; transition: color 0.3s; }
+#claim-reward-btn { background-color: var(--gold); color: var(--bg-dark); }
+
+/* Bitiş Ekranı */
+#end-screen h2 { color: var(--gold); font-size: 48px; }
+#final-score-text { font-size: 28px; margin-bottom: 30px; }
+
+/* Seyirci Jokeri Animasyonu */
+#audience-chart { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26, 26, 46, 0.9); display: flex; justify-content: space-around; align-items: flex-end; padding: 10px; box-sizing: border-box; }
+.bar-container { display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; width: 20%; }
+.bar { width: 100%; background-color: var(--gold); height: 0; transition: height 1s ease-out; }
+#audience-chart span { color: var(--text-white); font-size: 18px; font-weight: bold; margin-top: 5px; }
+
+@media (min-width: 768px) {
+    #answer-buttons { grid-template-columns: 1fr 1fr; }
+    #form-container { max-width: 600px; margin-left: auto; margin-right: auto; }
+}
 /* GİRİŞ EKRANI stillerinin altına veya uygun bir yere ekleyin */
 .language-selector {
     display: flex;
