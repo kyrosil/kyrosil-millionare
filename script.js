@@ -5,41 +5,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const endScreen = document.getElementById('end-screen');
     const startButton = document.getElementById('start-button');
     const restartButton = document.getElementById('restart-button');
-    const langToggleButton = document.getElementById('language-toggle-intro');
+    const langBtnTr = document.getElementById('lang-tr');
+    const langBtnEn = document.getElementById('lang-en');
     const countrySelect = document.getElementById('country-select');
     const gsmInput = document.getElementById('gsm');
     const legalConsentCheckbox = document.getElementById('legal-consent');
     const consentLabel = document.querySelector('label[for="legal-consent"] span');
     const attemptsLeftDisplay = document.getElementById('attempts-left');
-    
-    // HUD
     const scoreDisplay = document.getElementById('score');
     const timerDisplay = document.getElementById('timer');
     const questionCounterDisplay = document.getElementById('question-counter');
     const progressBar = document.getElementById('progress-bar');
-    
-    // Soru ve Cevap Alanları
     const questionTextDisplay = document.getElementById('question-text');
     const answerButtonsContainer = document.getElementById('answer-buttons');
     const resultTextDisplay = document.getElementById('result-text');
     const claimRewardBtn = document.getElementById('claim-reward-btn');
-
-    // Jokerler
     const jokerAudienceBtn = document.getElementById('joker-audience');
     const jokerFiftyBtn = document.getElementById('joker-fifty');
     const jokerDoubleBtn = document.getElementById('joker-double');
     const jokerSkipBtn = document.getElementById('joker-skip');
     const audienceChart = document.getElementById('audience-chart');
-    
-    // Bitiş Ekranı
     const endTitle = document.getElementById('end-title');
     const finalScoreText = document.getElementById('final-score-text');
-    
-    // Footer
     const bkWebsiteLink = document.querySelector('[data-lang-key="bkWebsite"]');
 
     // ---- OYUN DEĞİŞKENLERİ ---- //
     let allQuestions = {};
+    let shuffledQuestionPools = {};
     let currentQuestionData = {};
     let totalQuestionIndex = 0;
     let score = 0;
@@ -52,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         double: false, skip: false
     };
 
-    // ---- DİL VE METİN VERİLERİ ---- //
     const uiTexts = {
         tr: {
             title: "Kyrosil ile Bil Kazan", subtitle: "Supported by Burger King",
@@ -108,18 +99,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const europeanCountries = ["Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Ukraine", "United Kingdom", "Vatican City"];
 
-    // ---- ANA FONKSİYONLAR ---- //
-    
     async function init() {
         populateCountries();
         await loadQuestions();
         addEventListeners();
-        updateLanguageUI(); // Dil metinlerini ve dinamik alanları ayarla
-        checkDailyAttempts(); // Katılım hakkını en son kontrol et
+        updateLanguageUI();
+        checkDailyAttempts();
     }
-    
+
     function addEventListeners() {
-        langToggleButton.addEventListener('click', toggleLanguage);
+        langBtnTr.addEventListener('click', () => setLanguage('tr'));
+        langBtnEn.addEventListener('click', () => setLanguage('en'));
         startButton.addEventListener('click', startGame);
         restartButton.addEventListener('click', () => location.reload());
         jokerAudienceBtn.addEventListener('click', useAudienceJoker);
@@ -129,19 +119,15 @@ document.addEventListener('DOMContentLoaded', () => {
         claimRewardBtn.addEventListener('click', handleClaimReward);
     }
 
-    // ---- GÜNLÜK KATILIM HAKKI MANTIĞI ---- //
     function checkDailyAttempts() {
         const today = new Date().toISOString().slice(0, 10);
         let attemptsData = JSON.parse(localStorage.getItem('kyrosilQuizData')) || { date: '', count: 0 };
-
         if (attemptsData.date !== today) {
             attemptsData = { date: today, count: 0 };
             localStorage.setItem('kyrosilQuizData', JSON.stringify(attemptsData));
         }
-
         const attemptsLeft = 3 - attemptsData.count;
         attemptsLeftDisplay.textContent = `${uiTexts[currentLanguage].attemptsLeft} ${attemptsLeft}/3`;
-
         if (attemptsLeft <= 0) {
             startButton.disabled = true;
             startButton.textContent = uiTexts[currentLanguage].noAttempts;
@@ -151,21 +137,19 @@ document.addEventListener('DOMContentLoaded', () => {
             startButton.textContent = uiTexts[currentLanguage].startButton;
         }
     }
-    
+
     function recordAttempt() {
         let attemptsData = JSON.parse(localStorage.getItem('kyrosilQuizData'));
         attemptsData.count++;
         localStorage.setItem('kyrosilQuizData', JSON.stringify(attemptsData));
     }
 
-    // ---- ZAMANLAYICI MANTIĞI ---- //
     function startTimer() {
         clearInterval(timerInterval);
         const level = Math.floor(totalQuestionIndex / 5);
         const timeMap = [60, 90, 120, 150];
         let timeLeft = timeMap[level];
         timerDisplay.classList.remove('low-time');
-
         const updateTimerDisplay = () => {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
@@ -176,7 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 timerDisplay.classList.remove('low-time');
             }
         };
-
         updateTimerDisplay();
         timerInterval = setInterval(() => {
             timeLeft--;
@@ -187,45 +170,44 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 1000);
     }
-    
+
     function handleTimeUp() {
         resultTextDisplay.textContent = uiTexts[currentLanguage].timeUp;
         revealAnswers(-1);
         setTimeout(() => endGame(false), 2000);
     }
 
-    // ---- DİL VE UI ---- //
-    function toggleLanguage() {
-        currentLanguage = currentLanguage === 'tr' ? 'en' : 'tr';
+    function setLanguage(lang) {
+        currentLanguage = lang;
         updateLanguageUI();
-        checkDailyAttempts(); // Dil değişince metinleri de güncellemek için
+        checkDailyAttempts();
     }
-    
+
     function updateLanguageUI() {
         const texts = uiTexts[currentLanguage];
         document.title = texts.title;
-        langToggleButton.textContent = currentLanguage === 'tr' ? 'EN' : 'TR';
-        
         document.querySelectorAll('[data-lang-key]').forEach(el => {
             const key = el.dataset.langKey;
             if (texts[key]) el.innerHTML = texts[key];
         });
-        
         document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
             const key = el.dataset.langPlaceholder;
             if (texts[key]) el.placeholder = texts[key];
         });
-
-        if (currentLanguage === 'en') {
-            countrySelect.classList.remove('hidden');
-            gsmInput.placeholder = texts.gsmEn;
-            consentLabel.innerHTML = texts.consentEn;
-            bkWebsiteLink.href = "https://www.bk.com/";
-        } else {
+        if (currentLanguage === 'tr') {
+            langBtnTr.classList.add('active');
+            langBtnEn.classList.remove('active');
             countrySelect.classList.add('hidden');
             gsmInput.placeholder = texts.gsmTr;
             consentLabel.innerHTML = texts.consentTr;
             bkWebsiteLink.href = "https://www.burgerking.com.tr/";
+        } else {
+            langBtnEn.classList.add('active');
+            langBtnTr.classList.remove('active');
+            countrySelect.classList.remove('hidden');
+            gsmInput.placeholder = texts.gsmEn;
+            consentLabel.innerHTML = texts.consentEn;
+            bkWebsiteLink.href = "https://www.bk.com/";
         }
     }
 
@@ -238,31 +220,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ---- OYUN AKIŞI ---- //
     async function loadQuestions() {
         try {
             const response = await fetch('questions.json');
             allQuestions = await response.json();
-        } catch (error) {
-            console.error("Sorular yüklenemedi:", error);
+        } catch (error) { console.error("Sorular yüklenemedi:", error); }
+    }
+
+    function shuffleAllPools() {
+        shuffledQuestionPools = {};
+        for (const levelKey in allQuestions) {
+            const pool = allQuestions[levelKey][currentLanguage];
+            shuffledQuestionPools[levelKey] = [...pool].sort(() => Math.random() - 0.5);
         }
     }
 
     function startGame() {
         if (!validateForm()) return;
-        
         recordAttempt();
         checkDailyAttempts();
-
+        shuffleAllPools();
         introScreen.classList.remove('active');
         gameScreen.classList.add('active');
-        
         resetGameState();
         loadNextQuestion();
     }
 
     function validateForm() {
-        const inputs = [ document.getElementById('firstName'), document.getElementById('lastName'), document.getElementById('email'), document.getElementById('social'), gsmInput ];
+        const inputs = [document.getElementById('firstName'), document.getElementById('lastName'), document.getElementById('email'), document.getElementById('social'), gsmInput];
         if (currentLanguage === 'en') inputs.push(countrySelect);
         for (let input of inputs) {
             if (!input.value) {
@@ -276,29 +261,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return true;
     }
-    
+
     function resetGameState() {
         score = 0;
         totalQuestionIndex = 0;
         jokers = { audience: true, fiftyFifty: false, double: false, skip: false };
         updateJokerUI();
     }
-    
+
     function loadNextQuestion() {
         clearInterval(timerInterval);
         claimRewardBtn.classList.add('hidden');
         isDoubleAnswerActive = false;
-        
         const level = Math.floor(totalQuestionIndex / 5) + 1;
         const questionInLevelIndex = totalQuestionIndex % 5;
         const levelKey = `seviye${level}`;
-        
-        if (!allQuestions[levelKey] || !allQuestions[levelKey][currentLanguage][questionInLevelIndex]) {
+        currentQuestionData = shuffledQuestionPools[levelKey]?.[questionInLevelIndex];
+        if (!currentQuestionData) {
             endGame(true);
             return;
         }
-        
-        currentQuestionData = allQuestions[levelKey][currentLanguage][questionInLevelIndex];
         displayQuestion();
         updateHUD();
         startTimer();
@@ -309,7 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
         answerButtonsContainer.innerHTML = '';
         resultTextDisplay.textContent = '';
         audienceChart.classList.add('hidden');
-        
         currentQuestionData.answers.forEach((answer, index) => {
             const button = document.createElement('button');
             button.innerHTML = answer;
@@ -322,9 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function selectAnswer(selectedIndex) {
         clearInterval(timerInterval);
-
         const isCorrect = selectedIndex === currentQuestionData.correct;
-        
         if (isDoubleAnswerActive) {
             isDoubleAnswerActive = false;
             jokers.double = false;
@@ -332,7 +311,6 @@ document.addEventListener('DOMContentLoaded', () => {
             handleSecondAnswer(selectedIndex);
             return;
         }
-
         if (jokers.double && !isCorrect) {
             isDoubleAnswerActive = true;
             const buttons = answerButtonsContainer.querySelectorAll('.answer-btn');
@@ -340,16 +318,13 @@ document.addEventListener('DOMContentLoaded', () => {
             buttons[selectedIndex].disabled = true;
             return;
         }
-        
         revealAnswers(selectedIndex);
-        
         if (isCorrect) {
             score += 50;
             resultTextDisplay.textContent = uiTexts[currentLanguage].correct;
         } else {
             resultTextDisplay.textContent = uiTexts[currentLanguage].wrong;
         }
-        
         setTimeout(() => {
             if (isCorrect) {
                 handleCorrectAnswerFlow();
@@ -358,18 +333,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 2000);
     }
-    
+
     function handleSecondAnswer(selectedIndex) {
         const isCorrect = selectedIndex === currentQuestionData.correct;
         revealAnswers(selectedIndex);
-         if (isCorrect) {
+        if (isCorrect) {
             score += 50;
             resultTextDisplay.textContent = uiTexts[currentLanguage].correct;
         } else {
             resultTextDisplay.textContent = uiTexts[currentLanguage].wrong;
         }
         setTimeout(() => {
-             if (isCorrect) {
+            if (isCorrect) {
                 handleCorrectAnswerFlow();
             } else {
                 endGame(false);
@@ -388,23 +363,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    
+
     function handleCorrectAnswerFlow() {
         totalQuestionIndex++;
         const milestone = totalQuestionIndex;
-        if (milestone === 5 || milestone === 10 || milestone === 15 || milestone === 20) {
+        if (milestone === 20) {
+            claimRewardBtn.classList.remove('hidden');
+        } else if (milestone === 5 || milestone === 10 || milestone === 15) {
             if (milestone === 5) jokers.double = true;
             if (milestone === 10) jokers.fiftyFifty = true;
             if (milestone === 15) jokers.skip = true;
             updateJokerUI();
             claimRewardBtn.classList.remove('hidden');
-        } else if (totalQuestionIndex >= 20) {
-            endGame(true);
         } else {
             loadNextQuestion();
         }
     }
-    
+
     function updateHUD() {
         scoreDisplay.textContent = `${uiTexts[currentLanguage].score}: ${score}`;
         questionCounterDisplay.textContent = `${uiTexts[currentLanguage].question} ${Math.min(totalQuestionIndex + 1, 20)}/20`;
@@ -415,17 +390,14 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(timerInterval);
         gameScreen.classList.remove('active');
         endScreen.classList.add('active');
-
         if (totalQuestionIndex < 5 && !isWinner) {
             endTitle.textContent = uiTexts[currentLanguage].endGameLost;
         } else {
             endTitle.textContent = uiTexts[currentLanguage].congrats;
         }
-        
         finalScoreText.textContent = `${uiTexts[currentLanguage].finalScore}: ${score}`;
     }
 
-    // ---- JOKER VE ÖDÜL MANTIĞI ---- //
     function updateJokerUI() {
         jokerAudienceBtn.disabled = !jokers.audience;
         jokerFiftyBtn.disabled = !jokers.fiftyFifty;
@@ -433,14 +405,65 @@ document.addEventListener('DOMContentLoaded', () => {
         jokerSkipBtn.disabled = !jokers.skip;
     }
 
-    function useAudienceJoker() { /* ... Önceki koddan kopyalanacak ... */ }
-    function useFiftyFiftyJoker() { /* ... Önceki koddan kopyalanacak ... */ }
+    function useAudienceJoker() {
+        if (!jokers.audience) return;
+        jokers.audience = false;
+        updateJokerUI();
+        audienceChart.classList.remove('hidden');
+        const bars = audienceChart.querySelectorAll('.bar-container .bar');
+        let percentages = [10, 10, 10, 10];
+        const isLucky = Math.random() < 0.95;
+        let highIndex = currentQuestionData.correct;
+        if (!isLucky) {
+            let wrongAnswers = [0, 1, 2, 3].filter(i => i !== currentQuestionData.correct);
+            highIndex = wrongAnswers[Math.floor(Math.random() * wrongAnswers.length)];
+        }
+        let remainingPercent = 100;
+        let highValue = 40 + Math.floor(Math.random() * 30);
+        percentages[highIndex] = highValue;
+        remainingPercent -= highValue;
+        let otherIndices = [0, 1, 2, 3].filter(i => i !== highIndex);
+        otherIndices.forEach((index, i) => {
+            if (i < 2) {
+                let randomPercent = 1 + Math.floor(Math.random() * (remainingPercent / 2));
+                percentages[index] = randomPercent;
+                remainingPercent -= randomPercent;
+            } else {
+                percentages[index] = remainingPercent;
+            }
+        });
+        bars.forEach((bar, index) => {
+            const barLabel = bar.parentElement.querySelector('span');
+            bar.style.height = `0%`; // Reset first
+            setTimeout(() => {
+                 bar.style.height = `${percentages[index]}%`;
+                 if (barLabel) barLabel.textContent = `${percentages[index]}%`;
+            }, 100);
+        });
+        setTimeout(() => { audienceChart.classList.add('hidden'); }, 4000);
+    }
     
+    function useFiftyFiftyJoker() {
+        if (!jokers.fiftyFifty) return;
+        jokers.fiftyFifty = false;
+        updateJokerUI();
+        const buttons = Array.from(answerButtonsContainer.querySelectorAll('.answer-btn'));
+        let wrongAnswers = [];
+        buttons.forEach((btn) => {
+            if (parseInt(btn.dataset.index) !== currentQuestionData.correct) {
+                wrongAnswers.push(btn);
+            }
+        });
+        wrongAnswers.sort(() => Math.random() - 0.5);
+        wrongAnswers[0].classList.add('hidden-by-joker');
+        wrongAnswers[1].classList.add('hidden-by-joker');
+    }
+
     function useDoubleAnswerJoker() {
         if (!jokers.double) return;
         alert(currentLanguage === 'tr' ? 'Çift Cevap hakkı aktif! İlk cevabınız yanlış ise bir hak daha verilecek.' : 'Double Answer joker is active! If your first answer is wrong, you will get a second chance.');
     }
-    
+
     function useSkipJoker() {
         if (!jokers.skip) return;
         clearInterval(timerInterval);
@@ -449,7 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
         score += 25;
         handleCorrectAnswerFlow();
     }
-    
+
     function handleClaimReward() {
         const milestone = totalQuestionIndex;
         const prizeMap = { 5: "Whopper Menu", 10: "1000 TL / 20 Euro Balance", 15: "5000 TL / 120 Euro Balance", 20: "20.000 TL / 500 Euro Cash" };
@@ -470,66 +493,6 @@ document.addEventListener('DOMContentLoaded', () => {
             loadNextQuestion();
         }
     }
-    
-    // Eksik Joker Fonksiyonları
-    function useAudienceJoker() {
-        if (!jokers.audience) return;
-        jokers.audience = false;
-        updateJokerUI();
-        
-        audienceChart.classList.remove('hidden');
-        const bars = audienceChart.querySelectorAll('.bar-container .bar');
-        let percentages = [10, 10, 10, 10];
-        
-        const isLucky = Math.random() < 0.95;
-        let highIndex = currentQuestionData.correct;
-        if (!isLucky) {
-            let wrongAnswers = [0,1,2,3].filter(i => i !== currentQuestionData.correct);
-            highIndex = wrongAnswers[Math.floor(Math.random() * wrongAnswers.length)];
-        }
 
-        let remainingPercent = 100;
-        let highValue = 40 + Math.floor(Math.random() * 30); // 40-69%
-        percentages[highIndex] = highValue;
-        remainingPercent -= highValue;
-
-        let otherIndices = [0,1,2,3].filter(i => i !== highIndex);
-        otherIndices.forEach((index, i) => {
-            if (i < 2) {
-                let randomPercent = 1 + Math.floor(Math.random() * (remainingPercent / 2));
-                percentages[index] = randomPercent;
-                remainingPercent -= randomPercent;
-            } else {
-                percentages[index] = remainingPercent;
-            }
-        });
-        
-        bars.forEach((bar, index) => {
-            bar.style.height = `${percentages[index]}%`;
-            bar.parentElement.querySelector('span').textContent = `${percentages[index]}%`;
-        });
-
-        setTimeout(() => { audienceChart.classList.add('hidden'); }, 4000);
-    }
-
-    function useFiftyFiftyJoker() {
-        if (!jokers.fiftyFifty) return;
-        jokers.fiftyFifty = false;
-        updateJokerUI();
-
-        const buttons = Array.from(answerButtonsContainer.querySelectorAll('.answer-btn'));
-        let wrongAnswers = [];
-        buttons.forEach((btn, index) => {
-            if (index !== currentQuestionData.correct) {
-                wrongAnswers.push(btn);
-            }
-        });
-
-        wrongAnswers.sort(() => Math.random() - 0.5);
-        wrongAnswers[0].classList.add('hidden-by-joker');
-        wrongAnswers[1].classList.add('hidden-by-joker');
-    }
-
-    // Oyunu Başlat
     init();
 });
