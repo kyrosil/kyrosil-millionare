@@ -1,20 +1,38 @@
 {
   "seviye1": {
     "tr": [
-      { "question": "Berlin Duvarı'nın yıkılışı hangi yılda gerçekleşmiştir?", "answers": ["1985", "1989", "1991", "1987"], "correct": 1 },
-      { "question": "Matbaayı Avrupa'da ilk kez kullanan ve modern baskı tekniğini geliştiren kişi kimdir?", "answers": ["Leonardo da Vinci", "Galileo Galilei", "Johannes Gutenberg", "Isaac Newton"], "correct": 2 },
+      { "question": "Matbaayı Avrupa'da modern anlamda geliştiren ve seri üretimi başlatan kişi kimdir?", "answers": ["Leonardo da Vinci", "Galileo Galilei", "Johannes Gutenberg", "Isaac Newton"], "correct": 2 },
       { "question": "Fransız İhtilali'nin başlangıcı olarak kabul edilen olay hangisidir?", "answers": ["Waterloo Savaşı", "Viyana Kongresi", "Bastille Baskını", "İnsan ve Yurttaş Hakları Bildirisi"], "correct": 2 },
       { "question": "Antik Roma'da halk meclislerine ne ad verilirdi?", "answers": ["Senato", "Konsül", "Comitia", "Tribün"], "correct": 2 },
+      { "question": "'Mona Lisa' tablosu hangi ünlü Rönesans sanatçısına aittir?", "answers": ["Michelangelo", "Raphael", "Donatello", "Leonardo da Vinci"], "correct": 3 },
+      { "question": "Vikinglerin anavatanı olarak bilinen coğrafi bölge neresidir?", "answers": ["Britanya", "İber Yarımadası", "İskandinavya", "Balkanlar"], "correct": 2 },
+      { "question": "Hangisi, İpek Yolu üzerinde yer alan tarihi şehirlerden biri değildir?", "answers": ["Semerkant", "Buhara", "Kaşgar", "Sparta"], "correct": 3 },
+      { "question": "Berlin Duvarı hangi iki ülkeyi birbirinden ayırıyordu?", "answers": ["Polonya ve Rusya", "Avusturya ve Macaristan", "Doğu ve Batı Almanya", "Fransa ve Almanya"], "correct": 2 },
+      { "question": "Tarihteki ilk yazılı kanunları oluşturan Mezopotamya kralı kimdir?", "answers": ["Sargon", "Hammurabi", "Nabukadnezar", "Asurbanipal"], "correct": 1 },
+      { "question": "Pusulayı icat eden ve denizcilikte yaygınlaşmasını sağlayan medeniyet hangisidir?", "answers": ["Antik Yunan", "Roma İmparatorluğu", "Çin", "Mısır"], "correct": 2 },
       { "question": "Orta Çağ Avrupası'nda veba salgınına ne ad verilmiştir?", "answers": ["Kızıl Veba", "İspanyol Gribi", "Kara Ölüm", "Domuz Gribi"], "correct": 2 },
-      { "question": "Hangisi, İpek Yolu üzerinde yer alan tarihi şehirlerden biri değildir?", "answers": ["Semerkant", "Buhara", "Kaşgar", "Sparta"], "correct": 3 }
+      { "question": "Fatih Sultan Mehmet, İstanbul'u fethettiğinde kaç yaşındaydı?", "answers": ["21", "25", "29", "32"], "correct": 0 },
+      { "question": "Amerikan Bağımsızlık Bildirgesi hangi yılda ilan edilmiştir?", "answers": ["1776", "1789", "1812", "1750"], "correct": 0 },
+      { "question": "Sparta ve Atina arasında geçen ve Antik Yunan dünyasını sarsan savaşlara ne ad verilir?", "answers": ["Pers Savaşları", "Peloponez Savaşları", "Makedon Savaşları", "Pön Savaşları"], "correct": 1 },
+      { "question": "Hindistan'daki Tac Mahal, hangi Babür hükümdarı tarafından eşi için yaptırılmıştır?", "answers": ["Ekber Şah", "Babür Şah", "Şah Cihan", "Evrengzib"], "correct": 2 },
+      { "question": "Sanayi Devrimi ilk olarak hangi ülkede başlamıştır?", "answers": ["Fransa", "Almanya", "ABD", "İngiltere"], "correct": 3 }
     ],
     "en": [
-      { "question": "In which year did the Berlin Wall fall?", "answers": ["1985", "1989", "1991", "1987"], "correct": 1 },
-      { "question": "Who first used the printing press in Europe and developed modern printing techniques?", "answers": ["Leonardo da Vinci", "Galileo Galilei", "Johannes Gutenberg", "Isaac Newton"], "correct": 2 },
+      { "question": "Who developed the printing press in Europe in the modern sense and started mass production?", "answers": ["Leonardo da Vinci", "Galileo Galilei", "Johannes Gutenberg", "Isaac Newton"], "correct": 2 },
       { "question": "Which event is considered the beginning of the French Revolution?", "answers": ["Battle of Waterloo", "Congress of Vienna", "Storming of the Bastille", "Declaration of the Rights of Man"], "correct": 2 },
       { "question": "What were the popular assemblies called in Ancient Rome?", "answers": ["Senate", "Consul", "Comitia", "Tribune"], "correct": 2 },
+      { "question": "The 'Mona Lisa' painting belongs to which famous Renaissance artist?", "answers": ["Michelangelo", "Raphael", "Donatello", "Leonardo da Vinci"], "correct": 3 },
+      { "question": "Which geographical region is known as the homeland of the Vikings?", "answers": ["Britain", "Iberian Peninsula", "Scandinavia", "The Balkans"], "correct": 2 },
+      { "question": "Which of these is NOT a historical city on the Silk Road?", "answers": ["Samarkand", "Bukhara", "Kashgar", "Sparta"], "correct": 3 },
+      { "question": "Which two countries did the Berlin Wall separate?", "answers": ["Poland and Russia", "Austria and Hungary", "East and West Germany", "France and Germany"], "correct": 2 },
+      { "question": "Who was the Mesopotamian king who created the first written laws in history?", "answers": ["Sargon", "Hammurabi", "Nebuchadnezzar", "Ashurbanipal"], "correct": 1 },
+      { "question": "Which civilization invented the compass and enabled its widespread use in navigation?", "answers": ["Ancient Greece", "Roman Empire", "China", "Egypt"], "correct": 2 },
       { "question": "What was the name given to the plague pandemic in medieval Europe?", "answers": ["The Red Plague", "The Spanish Flu", "The Black Death", "The Swine Flu"], "correct": 2 },
-      { "question": "Which of these is NOT a historical city on the Silk Road?", "answers": ["Samarkand", "Bukhara", "Kashgar", "Sparta"], "correct": 3 }
+      { "question": "How old was Sultan Mehmed the Conqueror when he conquered Constantinople?", "answers": ["21", "25", "29", "32"], "correct": 0 },
+      { "question": "In which year was the American Declaration of Independence announced?", "answers": ["1776", "1789", "1812", "1750"], "correct": 0 },
+      { "question": "What is the name of the wars between Sparta and Athens that shook the Ancient Greek world?", "answers": ["Persian Wars", "Peloponnesian Wars", "Macedonian Wars", "Punic Wars"], "correct": 1 },
+      { "question": "The Taj Mahal in India was built by which Mughal emperor for his wife?", "answers": ["Akbar", "Babur", "Shah Jahan", "Aurangzeb"], "correct": 2 },
+      { "question": "In which country did the Industrial Revolution first begin?", "answers": ["France", "Germany", "USA", "England"], "correct": 3 }
     ]
   },
   "seviye2": {
@@ -22,17 +40,35 @@
       { "question": "1071 Malazgirt Savaşı, Bizans İmparatorluğu ile hangi devlet arasında yapılmıştır?", "answers": ["Osmanlı İmparatorluğu", "Büyük Selçuklu Devleti", "Memlük Devleti", "Abbâsî Halifeliği"], "correct": 1 },
       { "question": "Mezopotamya'da yazıyı ilk icat eden uygarlık hangisidir?", "answers": ["Babiller", "Akadlar", "Asurlular", "Sümerler"], "correct": 3 },
       { "question": "Magna Carta'nın imzalanmasıyla hangi ülkede kralın yetkileri ilk kez kısıtlanmıştır?", "answers": ["Fransa", "İngiltere", "İspanya", "Almanya"], "correct": 1 },
-      { "question": "Endülüs Emevi Devleti'nin başkenti hangi şehirdi?", "answers": ["Bağdat", "Şam", "Kurtuba", "Toledo"], "correct": 2 },
       { "question": "'Güneş Kral' olarak bilinen ünlü Fransız hükümdarı kimdir?", "answers": ["XIV. Louis", "Napolyon Bonapart", "Şarlman", "XV. Louis"], "correct": 0 },
-      { "question": "Amerika kıtasının 'keşfinden' önce Vikinglerin ulaştığına dair kanıtlar bulunan yerleşim yeri nerededir?", "answers": ["Grönland", "İzlanda", "Newfoundland", "Alaska"], "correct": 2 }
+      { "question": "Japonya'da feodal savaşçı sınıfına ne ad verilirdi?", "answers": ["Ninja", "Samuray", "Şogun", "Daimyo"], "correct": 1 },
+      { "question": "Kristof Kolomb, Amerika'ya ulaştığında aslında nereye ulaştığını düşünmüştü?", "answers": ["Avustralya", "Afrika", "Hindistan", "Çin"], "correct": 2 },
+      { "question": "Aztek İmparatorluğu'nun başkenti olan ve günümüz Mexico City'nin bulunduğu yerdeki şehrin adı neydi?", "answers": ["Machu Picchu", "Cusco", "Tikal", "Tenochtitlan"], "correct": 3 },
+      { "question": "Osmanlı İmparatorluğu'nda Lale Devri hangi padişah döneminde yaşanmıştır?", "answers": ["IV. Murat", "III. Selim", "III. Ahmet", "I. Mahmud"], "correct": 2 },
+      { "question": "Protestan Reformu'nu başlatan Martin Luther, 95 tezini hangi kilisenin kapısına asmıştır?", "answers": ["St. Peter Bazilikası", "Notre Dame Katedrali", "Wittenberg Saray Kilisesi", "Köln Katedrali"], "correct": 2 },
+      { "question": "İngiltere'yi fetheden son yabancı güç olan Normanlar'ın lideri kimdi?", "answers": ["Harald Hardrada", "Kral Harold Godwinson", "Fatih William", "Kral Arthur"], "correct": 2 },
+      { "question": "Rusya'nın 'Deli' lakaplı, modernleşme çabalarıyla tanınan çarı kimdir?", "answers": ["Korkunç İvan", "Büyük Katerina", "I. Petro", "I. Nikolay"], "correct": 2 },
+      { "question": "Endülüs Emevi Devleti'nin başkenti hangi şehirdi?", "answers": ["Bağdat", "Şam", "Kurtuba", "Toledo"], "correct": 2 },
+      { "question": "İnsanlık tarihinin en büyük imparatorluklarından biri olan Moğol İmparatorluğu'nu kim kurmuştur?", "answers": ["Atilla", "Timur", "Cengiz Han", "Kubilay Han"], "correct": 2 },
+      { "question": "İki kutuplu dünya düzeninin oluştuğu Soğuk Savaş hangi iki süper güç arasında yaşanmıştır?", "answers": ["İngiltere ve Fransa", "Almanya ve Japonya", "ABD ve Sovyetler Birliği", "Çin ve ABD"], "correct": 2 },
+      { "question": "Mısır hiyerogliflerinin çözülmesini sağlayan üç dilli yazıtın adı nedir?", "answers": ["Hammurabi Kanunları", "Gılgamış Destanı", "Rosetta Taşı", "Ölü Deniz Parşömenleri"], "correct": 2 }
     ],
     "en": [
       { "question": "The Battle of Manzikert in 1071 was fought between the Byzantine Empire and which state?", "answers": ["Ottoman Empire", "Great Seljuk Empire", "Mamluk Sultanate", "Abbasid Caliphate"], "correct": 1 },
       { "question": "Which civilization first invented writing in Mesopotamia?", "answers": ["Babylonians", "Akkadians", "Assyrians", "Sumerians"], "correct": 3 },
       { "question": "In which country were the king's powers first limited with the signing of the Magna Carta?", "answers": ["France", "England", "Spain", "Germany"], "correct": 1 },
-      { "question": "What was the capital city of the Umayyad Caliphate of Córdoba?", "answers": ["Baghdad", "Damascus", "Córdoba", "Toledo"], "correct": 2 },
       { "question": "Which famous French monarch was known as the 'Sun King'?", "answers": ["Louis XIV", "Napoleon Bonaparte", "Charlemagne", "Louis XV"], "correct": 0 },
-      { "question": "Where is the settlement with evidence of Vikings reaching it before the 'discovery' of the Americas?", "answers": ["Greenland", "Iceland", "Newfoundland", "Alaska"], "correct": 2 }
+      { "question": "What was the name of the feudal warrior class in Japan?", "answers": ["Ninja", "Samurai", "Shogun", "Daimyo"], "correct": 1 },
+      { "question": "When Christopher Columbus reached the Americas, where did he think he had actually arrived?", "answers": ["Australia", "Africa", "India", "China"], "correct": 2 },
+      { "question": "What was the name of the capital of the Aztec Empire, located where modern-day Mexico City is?", "answers": ["Machu Picchu", "Cusco", "Tikal", "Tenochtitlan"], "correct": 3 },
+      { "question": "During which sultan's reign did the Tulip Era occur in the Ottoman Empire?", "answers": ["Murad IV", "Selim III", "Ahmed III", "Mahmud I"], "correct": 2 },
+      { "question": "Martin Luther, who initiated the Protestant Reformation, nailed his 95 Theses to the door of which church?", "answers": ["St. Peter's Basilica", "Notre Dame Cathedral", "Wittenberg Palace Church", "Cologne Cathedral"], "correct": 2 },
+      { "question": "Who was the leader of the Normans, the last foreign power to conquer England?", "answers": ["Harald Hardrada", "King Harold Godwinson", "William the Conqueror", "King Arthur"], "correct": 2 },
+      { "question": "Who was the Russian tsar known as 'the Great', famous for his modernization efforts?", "answers": ["Ivan the Terrible", "Catherine the Great", "Peter I", "Nicholas I"], "correct": 2 },
+      { "question": "What was the capital city of the Umayyad Caliphate of Córdoba?", "answers": ["Baghdad", "Damascus", "Córdoba", "Toledo"], "correct": 2 },
+      { "question": "Who founded the Mongol Empire, one of the largest empires in human history?", "answers": ["Attila", "Tamerlane", "Genghis Khan", "Kublai Khan"], "correct": 2 },
+      { "question": "The Cold War, which formed a bipolar world order, was fought between which two superpowers?", "answers": ["Britain and France", "Germany and Japan", "USA and Soviet Union", "China and USA"], "correct": 2 },
+      { "question": "What is the name of the trilingual inscription that enabled the deciphering of Egyptian hieroglyphs?", "answers": ["Code of Hammurabi", "Epic of Gilgamesh", "Rosetta Stone", "Dead Sea Scrolls"], "correct": 2 }
     ]
   },
   "seviye3": {
@@ -40,17 +76,35 @@
       { "question": "Otuz Yıl Savaşları'nı sona erdiren ve modern uluslararası sistemin temelini attığı kabul edilen antlaşma hangisidir?", "answers": ["Versay Antlaşması", "Westphalia Antlaşması", "Viyana Kongresi", "Augsburg Barışı"], "correct": 1 },
       { "question": "Moğol İmparatorluğu'nun kurucusu Cengiz Han'ın asıl adı nedir?", "answers": ["Kubilay", "Hülagü", "Ögeday", "Temuçin"], "correct": 3 },
       { "question": "1453'te İstanbul'un Fethi sırasında kullanılan devasa topları döken mühendis kimdir?", "answers": ["Mimar Sinan", "Hezarfen Ahmed Çelebi", "Urban Usta", "Lagari Hasan Çelebi"], "correct": 2 },
-      { "question": "İngiltere ve Fransa arasında 1337-1453 yılları arasında süren savaşlar dizisine ne ad verilir?", "answers": ["Güller Savaşı", "Yedi Yıl Savaşları", "Yüz Yıl Savaşları", "Napolyon Savaşları"], "correct": 2 },
       { "question": "Hangi antik filozof, öğrencisi Platon'un diyalogları aracılığıyla tanınır ve 'sorgulanmamış yaşam yaşanmaya değmez' sözüyle ünlüdür?", "answers": ["Aristoteles", "Sokrates", "Herakleitos", "Demokritos"], "correct": 1 },
-      { "question": "Kutsal Roma İmparatorluğu hangi olayla resmen sona ermiştir?", "answers": ["Fransız İhtilali", "Reformasyon", "Napolyon Savaşları", "Viyana Kongresi"], "correct": 2 }
+      { "question": "Kutsal Roma İmparatorluğu hangi olayla resmen sona ermiştir?", "answers": ["Fransız İhtilali", "Reformasyon", "Napolyon Savaşları", "Viyana Kongresi"], "correct": 2 },
+      { "question": "İngiltere'de Tudor Hanedanı'nı başlatan ve Güller Savaşları'nı sona erdiren hükümdar kimdir?", "answers": ["VIII. Henry", "I. Elizabeth", "VII. Henry", "III. Richard"], "correct": 2 },
+      { "question": "Apartheid rejimi hangi ülkede uygulanmıştır?", "answers": ["Brezilya", "Hindistan", "Güney Afrika", "Avustralya"], "correct": 2 },
+      { "question": "Marco Polo'nun, Uzak Doğu seyahatlerini anlattığı ünlü eserin adı nedir?", "answers": ["Summa Theologica", "Prens", "Decameron", "Il Milione"], "correct": 3 },
+      { "question": "Tarihteki ilk imparatorluk olarak kabul edilen Akad İmparatorluğu'nun kurucusu kimdir?", "answers": ["Hammurabi", "Büyük Sargon", "Gudea", "Ur-Nammu"], "correct": 1 },
+      { "question": "ABD'de köleliği kaldıran ve iç savaş sırasında başkanlık yapan kişi kimdir?", "answers": ["George Washington", "Thomas Jefferson", "Abraham Lincoln", "Theodore Roosevelt"], "correct": 2 },
+      { "question": "İngiltere ve Fransa arasında 1337-1453 yılları arasında süren savaşlar dizisine ne ad verilir?", "answers": ["Güller Savaşı", "Yedi Yıl Savaşları", "Yüz Yıl Savaşları", "Napolyon Savaşları"], "correct": 2 },
+      { "question": "1917'de Rusya'da Çarlık rejimini yıkan devrime ne ad verilir?", "answers": ["Şanlı Devrim", "Temmuz Devrimi", "Bolşevik Devrimi", "Bahar Devrimi"], "correct": 2 },
+      { "question": "Antik Mısır medeniyetinin yöneticilerine verilen unvan nedir?", "answers": ["İmparator", "Sultan", "Firavun", "Kral"], "correct": 2 },
+      { "question": "İkinci Dünya Savaşı sırasında Normandiya Çıkarması hangi kod adıyla bilinir?", "answers": ["Barbarossa Harekatı", "Meşale Harekatı", "Overlord Harekatı", "Deniz Aslanı Harekatı"], "correct": 2 },
+      { "question": "Modern kimyanın babası olarak kabul edilen ve kütlenin korunumu yasasını bulan bilim insanı kimdir?", "answers": ["Robert Boyle", "John Dalton", "Dmitri Mendeleyev", "Antoine Lavoisier"], "correct": 3 }
     ],
     "en": [
       { "question": "Which treaty ended the Thirty Years' War and is considered to have laid the foundation for the modern international system?", "answers": ["Treaty of Versailles", "Peace of Westphalia", "Congress of Vienna", "Peace of Augsburg"], "correct": 1 },
       { "question": "What was the birth name of Genghis Khan, the founder of the Mongol Empire?", "answers": ["Kublai", "Hulagu", "Ogedei", "Temujin"], "correct": 3 },
       { "question": "Who was the engineer who cast the giant cannons used during the Conquest of Istanbul in 1453?", "answers": ["Mimar Sinan", "Hezarfen Ahmed Celebi", "Master Orban", "Lagari Hasan Celebi"], "correct": 2 },
-      { "question": "What is the name given to the series of conflicts between England and France from 1337 to 1453?", "answers": ["Wars of the Roses", "Seven Years' War", "Hundred Years' War", "Napoleonic Wars"], "correct": 2 },
       { "question": "Which ancient philosopher is known through the dialogues of his student Plato and is famous for the saying 'the unexamined life is not worth living'?", "answers": ["Aristotle", "Socrates", "Heraclitus", "Democritus"], "correct": 1 },
-      { "question": "With which event did the Holy Roman Empire officially come to an end?", "answers": ["The French Revolution", "The Reformation", "The Napoleonic Wars", "The Congress of Vienna"], "correct": 2 }
+      { "question": "With which event did the Holy Roman Empire officially come to an end?", "answers": ["The French Revolution", "The Reformation", "The Napoleonic Wars", "The Congress of Vienna"], "correct": 2 },
+      { "question": "Who was the monarch who started the Tudor dynasty in England and ended the Wars of the Roses?", "answers": ["Henry VIII", "Elizabeth I", "Henry VII", "Richard III"], "correct": 2 },
+      { "question": "In which country was the Apartheid regime implemented?", "answers": ["Brazil", "India", "South Africa", "Australia"], "correct": 2 },
+      { "question": "What is the name of Marco Polo's famous work describing his travels to the Far East?", "answers": ["Summa Theologica", "The Prince", "The Decameron", "Il Milione"], "correct": 3 },
+      { "question": "Who was the founder of the Akkadian Empire, considered the first empire in history?", "answers": ["Hammurabi", "Sargon the Great", "Gudea", "Ur-Nammu"], "correct": 1 },
+      { "question": "Who abolished slavery in the US and served as president during the Civil War?", "answers": ["George Washington", "Thomas Jefferson", "Abraham Lincoln", "Theodore Roosevelt"], "correct": 2 },
+      { "question": "What is the name given to the series of conflicts between England and France from 1337 to 1453?", "answers": ["Wars of the Roses", "Seven Years' War", "Hundred Years' War", "Napoleonic Wars"], "correct": 2 },
+      { "question": "What is the name of the revolution that overthrew the Tsarist regime in Russia in 1917?", "answers": ["Glorious Revolution", "July Revolution", "Bolshevik Revolution", "Spring Revolution"], "correct": 2 },
+      { "question": "What is the title given to the rulers of the ancient Egyptian civilization?", "answers": ["Emperor", "Sultan", "Pharaoh", "King"], "correct": 2 },
+      { "question": "By what code name is the Normandy Landing known during World War II?", "answers": ["Operation Barbarossa", "Operation Torch", "Operation Overlord", "Operation Sea Lion"], "correct": 2 },
+      { "question": "Who is considered the father of modern chemistry and discovered the law of conservation of mass?", "answers": ["Robert Boyle", "John Dalton", "Dmitri Mendeleev", "Antoine Lavoisier"], "correct": 3 }
     ]
   },
   "seviye4": {
@@ -60,7 +114,16 @@
       { "question": "1815'teki Viyana Kongresi'nin arkasındaki ana diplomat ve 'Metternich Sistemi' olarak bilinen muhafazakar düzenin mimarı kimdir?", "answers": ["Talleyrand", "Klemens von Metternich", "Castlereagh", "I. Aleksandr"], "correct": 1 },
       { "question": "Julius Caesar'ın Galya'daki fetihlerini anlattığı ünlü eseri nedir?", "answers": ["De Bello Civili", "De Bello Gallico", "Anabasis", "Germania"], "correct": 1 },
       { "question": "1618'de Prag'da gerçekleşen ve Otuz Yıl Savaşları'nı tetikleyen olaya ne ad verilir?", "answers": ["Bartholomew Gecesi Katliamı", "Defenestrasyon", "Kanlı Pazar", "Uzun Parlamento"], "correct": 1 },
-      { "question": "Çin'deki Afyon Savaşları, Çin ile hangi Batılı güç arasında gerçekleşmiştir?", "answers": ["Fransa", "Amerika Birleşik Devletleri", "Portekiz", "Büyük Britanya"], "correct": 3 }
+      { "question": "Çin'deki Afyon Savaşları, Çin ile hangi Batılı güç arasında gerçekleşmiştir?", "answers": ["Fransa", "Amerika Birleşik Devletleri", "Portekiz", "Büyük Britanya"], "correct": 3 },
+      { "question": "Kamboçya'da 20. yüzyılda korkunç bir soykırıma imza atan ve liderliğini Pol Pot'un yaptığı örgütün adı nedir?", "answers": ["Viet Cong", "Kızıl Kmerler", "Pathet Lao", "Kızıl Tugaylar"], "correct": 1 },
+      { "question": "Osmanlı Devleti'nde, Batı tarzı ilk askeri okul olan Hendesehâne'yi kuran padişah kimdir?", "answers": ["III. Selim", "II. Mahmud", "I. Abdülhamid", "I. Mahmud"], "correct": 3 },
+      { "question": "19. yüzyılda 'Avrupa'nın hasta adamı' olarak nitelendirilen devlet hangisidir?", "answers": ["Avusturya-Macaristan", "Rusya İmparatorluğu", "Osmanlı İmparatorluğu", "İspanya Krallığı"], "correct": 2 },
+      { "question": "Tarihteki en kısa süren savaş, 1896'da hangi iki ülke arasında gerçekleşmiştir?", "answers": ["İngiltere ve Zanzibar", "İtalya ve Etiyopya", "İspanya ve ABD", "Japonya ve Çin"], "correct": 0 },
+      { "question": "Roma'yı yakmakla suçlanan ancak tarihçilerin bu konuda şüpheleri olduğu İmparator kimdir?", "answers": ["Caligula", "Neron", "Commodus", "Domitian"], "correct": 1 },
+      { "question": "1962 Küba Füze Krizi hangi iki lider arasında yaşanmıştır?", "answers": ["Eisenhower ve Kruşçev", "Kennedy ve Kruşçev", "Johnson ve Brejnev", "Nixon ve Gorbaçov"], "correct": 1 },
+      { "question": "Tarihin en zengin insanı olarak kabul edilen ve Mali İmparatorluğu'nun hükümdarı olan kişi kimdir?", "answers": ["Augustus Caesar", "Mansa Musa", "Cengiz Han", "Jakob Fugger"], "correct": 1 },
+      { "question": "Tanzimat Fermanı (Gülhane Hatt-ı Şerifi) hangi Osmanlı padişahı döneminde ilan edilmiştir?", "answers": ["II. Mahmud", "Abdülmecid", "Abdülaziz", "II. Abdülhamid"], "correct": 1 },
+      { "question": "Eski Ahit'e göre, Babil Kulesi'nin yapılış amacı neydi?", "answers": ["Kral için bir saray inşa etmek", "Bir selden korunmak", "Tanrı'ya ulaşmak", "Bir gözlemevi kurmak"], "correct": 2 }
     ],
     "en": [
       { "question": "The secret protocol that initiated World War II with the invasion of Poland was part of a non-aggression pact signed between which two countries?", "answers": ["Germany and Italy", "Germany and the Soviet Union", "Japan and Germany", "Britain and France"], "correct": 1 },
@@ -68,7 +131,16 @@
       { "question": "Who was the main diplomat behind the Congress of Vienna in 1815 and the architect of the conservative order known as the 'Metternich System'?", "answers": ["Talleyrand", "Klemens von Metternich", "Castlereagh", "Alexander I"], "correct": 1 },
       { "question": "What is Julius Caesar's famous work in which he describes his conquests in Gaul?", "answers": ["De Bello Civili", "De Bello Gallico", "Anabasis", "Germania"], "correct": 1 },
       { "question": "What is the name of the event in Prague in 1618 that triggered the Thirty Years' War?", "answers": ["St. Bartholomew's Day Massacre", "Defenestration", "Bloody Sunday", "The Long Parliament"], "correct": 1 },
-      { "question": "The Opium Wars in China took place between China and which Western power?", "answers": ["France", "The United States", "Portugal", "Great Britain"], "correct": 3 }
+      { "question": "The Opium Wars in China took place between China and which Western power?", "answers": ["France", "The United States", "Portugal", "Great Britain"], "correct": 3 },
+      { "question": "What is the name of the organization led by Pol Pot that committed a horrific genocide in Cambodia in the 20th century?", "answers": ["Viet Cong", "Khmer Rouge", "Pathet Lao", "Red Brigades"], "correct": 1 },
+      { "question": "Which Ottoman sultan established the Hendesehâne, the first Western-style military school?", "answers": ["Selim III", "Mahmud II", "Abdul Hamid I", "Mahmud I"], "correct": 3 },
+      { "question": "Which state was described as the 'sick man of Europe' in the 19th century?", "answers": ["Austro-Hungarian Empire", "Russian Empire", "Ottoman Empire", "Kingdom of Spain"], "correct": 2 },
+      { "question": "The shortest war in history, in 1896, took place between which two countries?", "answers": ["England and Zanzibar", "Italy and Ethiopia", "Spain and USA", "Japan and China"], "correct": 0 },
+      { "question": "Which Emperor was accused of burning Rome, although historians are skeptical about this claim?", "answers": ["Caligula", "Nero", "Commodus", "Domitian"], "correct": 1 },
+      { "question": "The 1962 Cuban Missile Crisis occurred between which two leaders?", "answers": ["Eisenhower and Khrushchev", "Kennedy and Khrushchev", "Johnson and Brezhnev", "Nixon and Gorbachev"], "correct": 1 },
+      { "question": "Who is considered the richest person in history and was the ruler of the Mali Empire?", "answers": ["Augustus Caesar", "Mansa Musa", "Genghis Khan", "Jakob Fugger"], "correct": 1 },
+      { "question": "During which Ottoman sultan's reign was the Edict of Tanzimat (Gülhane Hatt-ı Şerifi) declared?", "answers": ["Mahmud II", "Abdulmejid I", "Abdulaziz", "Abdul Hamid II"], "correct": 1 },
+      { "question": "According to the Old Testament, what was the purpose of building the Tower of Babel?", "answers": ["To build a palace for the king", "To protect from a flood", "To reach God", "To establish an observatory"], "correct": 2 }
     ]
   }
 }
