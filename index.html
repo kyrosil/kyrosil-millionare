@@ -18,64 +18,64 @@
 
         <div id="intro-screen" class="screen active">
             <div class="intro-content">
-                <h1 class="title" data-lang-key="title"></h1>
-                <p class="subtitle" data-lang-key="subtitle"></p>
+                <h1 class="title" data-lang-key="title">Kyrosil ile Bil Kazan</h1>
+                <p class="subtitle" data-lang-key="subtitle">Supported by Burger King</p>
                 <p id="attempts-left" class="attempts-notice"></p>
                 
                 <div class="info-section">
-                    <h2 data-lang-key="rulesTitle"></h2>
-                    <p data-lang-key="rulesDesc"></p>
+                    <h2 data-lang-key="rulesTitle">Oyun Kuralları</h2>
+                    <p data-lang-key="rulesDesc">20 soruluk tarih maratonuna hoş geldiniz! Zorluğu giderek artan soruları ve zaman sınırını aşarak kilometre taşlarına ulaşın, muhteşem ödüller kazanın. 4 farklı joker hakkınız stratejinize güç katacak!</p>
                 </div>
                 
                 <div class="info-section">
-                    <h2 data-lang-key="prizesTitle"></h2>
+                    <h2 data-lang-key="prizesTitle">Ödüller</h2>
                     <ul class="prize-list">
-                        <li data-lang-key="prize5"></li>
-                        <li data-lang-key="prize10"></li>
-                        <li data-lang-key="prize15"></li>
-                        <li data-lang-key="prize20"></li>
+                        <li data-lang-key="prize5"><b>5. Soru:</b> Burger King'den Whopper Menü!</li>
+                        <li data-lang-key="prize10"><b>10. Soru:</b> BK'da geçerli 1000 TL / 20€ Bakiye!</li>
+                        <li data-lang-key="prize15"><b>15. Soru:</b> BK'da geçerli 5000 TL / 120€ Bakiye!</li>
+                        <li data-lang-key="prize20"><b>20. Soru:</b> 20.000 TL / 500€ Nakit Ödül!</li>
                     </ul>
                 </div>
 
-                <p class="language-notice" data-lang-key="langNotice"></p>
-                
-                <div class="language-selector">
-                    <button id="lang-tr" class="lang-btn" data-lang="tr">TÜRKÇE</button>
-                    <button id="lang-en" class="lang-btn" data-lang="en">ENGLISH</button>
+                <div class="language-selection-area">
+                    <p class="language-notice" data-lang-key="langNotice">Türkiye'den katılan yarışmacıların <b>Türkçe</b>, Avrupa'dan katılanların ise <b>İngilizce</b> dilini seçmesi ödül kazanımı için zorunludur.</p>
+                    <button id="language-toggle-intro" class="btn-lang">EN</button>
                 </div>
-
                 <div id="form-container">
                     <input type="text" id="firstName" data-lang-placeholder="firstName" required>
                     <input type="text" id="lastName" data-lang-placeholder="lastName" required>
                     <input type="email" id="email" data-lang-placeholder="email" required>
                     <input type="text" id="social" data-lang-placeholder="social" required>
-                    <select id="country-select" class="hidden"></select>
+                    <select id="country-select" class="hidden">
+                    </select>
                     <input type="tel" id="gsm" data-lang-placeholder="gsmTr" required>
                     <div class="legal-checkbox">
                         <input type="checkbox" id="legal-consent" required>
                         <label for="legal-consent">
-                            <span data-lang-key="consentTr"></span>
+                            <span data-lang-key="consentTr">
+                                <a href="#" target="_blank">KVKK Aydınlatma Metni'ni</a> okudum, anladım ve kişisel verilerimin işlenmesini onaylıyorum.
+                            </span>
                         </label>
                     </div>
                 </div>
-                <button id="start-button" class="btn" data-lang-key="startButton"></button>
+                <button id="start-button" class="btn" data-lang-key="startButton">OYUNU BAŞLAT</button>
             </div>
         </div>
 
         <div id="game-screen" class="screen">
             <div id="hud">
-                <div id="score"></div>
-                <div id="timer"></div>
-                <div id="question-counter"></div>
+                <div id="score">Puan: 0</div>
+                <div id="timer">00:00</div>
+                <div id="question-counter">Soru 1/20</div>
             </div>
              <div id="progress-container">
                 <div id="progress-bar"></div>
             </div>
             <div id="joker-container">
-                <button class="joker-btn" id="joker-audience" disabled><span class="joker-icon">📊</span><span data-lang-key="jokerAudience"></span></button>
-                <button class="joker-btn" id="joker-fifty" disabled><span class="joker-icon">50:50</span><span data-lang-key="jokerFifty"></span></button>
-                <button class="joker-btn" id="joker-double" disabled><span class="joker-icon">x2</span><span data-lang-key="jokerDouble"></span></button>
-                <button class="joker-btn" id="joker-skip" disabled><span class="joker-icon">⏭️</span><span data-lang-key="jokerSkip"></span></button>
+                <button class="joker-btn" id="joker-audience" disabled><span class="joker-icon">📊</span><span data-lang-key="jokerAudience">Seyirci</span></button>
+                <button class="joker-btn" id="joker-fifty" disabled><span class="joker-icon">50:50</span><span data-lang-key="jokerFifty">Yarı Yarıya</span></button>
+                <button class="joker-btn" id="joker-double" disabled><span class="joker-icon">x2</span><span data-lang-key="jokerDouble">Çift Cevap</span></button>
+                <button class="joker-btn" id="joker-skip" disabled><span class="joker-icon">⏭️</span><span data-lang-key="jokerSkip">Pas Geç</span></button>
             </div>
             <div id="question-box">
                 <p id="question-text"></p>
@@ -88,20 +88,21 @@
             </div>
             <div id="answer-buttons"></div>
             <p id="result-text"></p>
-            <button id="claim-reward-btn" class="btn hidden" data-lang-key="claimReward"></button>
+            <button id="claim-reward-btn" class="btn hidden" data-lang-key="claimReward">Ödülünü Al!</button>
         </div>
 
         <div id="end-screen" class="screen">
-            <h2 id="end-title" data-lang-key="congrats"></h2>
+            <h2 id="end-title" data-lang-key="congrats">Tebrikler!</h2>
             <p id="final-score-text"></p>
-            <button id="restart-button" class="btn" data-lang-key="restartButton"></button>
+            <button id="restart-button" class="btn" data-lang-key="restartButton">Yeniden Başla</button>
         </div>
         
         <footer class="game-footer">
             <a href="https://kyrosil.eu/" target="_blank">kyrosil.eu</a>
-            <a href="https://www.burgerking.com.tr/" target="_blank" data-lang-key="bkWebsite"></a>
+            <a href="https://www.burgerking.com.tr/" target="_blank" data-lang-key="bkWebsite">Burger King Türkiye</a>
         </footer>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
