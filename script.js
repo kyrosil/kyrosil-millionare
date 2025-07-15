@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. ELEMENTLERİ TANIMLA ---
+    // --- 1. TÜM ELEMENTLERİ ÖNCEDEN BUL ---
     const elements = {};
     const elementIds = [ 'intro-screen', 'game-screen', 'end-screen', 'start-button', 'restart-button', 'lang-tr', 'lang-en', 'country-select', 'gsm', 'legal-consent', 'attempts-left', 'score', 'timer', 'question-counter', 'progress-bar', 'question-text', 'answer-buttons', 'result-text', 'claim-reward-btn', 'joker-audience', 'joker-fifty', 'joker-double', 'joker-skip', 'audience-chart', 'end-title', 'final-score-text', 'firstName', 'lastName', 'email', 'social' ];
     elementIds.forEach(id => {
@@ -344,10 +344,10 @@ document.addEventListener('DOMContentLoaded', () => {
             loadNextQuestion();
         }
     }
-
+    
+    // --- 4. UYGULAMAYI BAŞLAT ---
     async function main() {
-        cacheDOMElements();
-        
+        // Dinleyicileri ata
         elements.langTr.addEventListener('click', () => renderUIForLanguage('tr'));
         elements.langEn.addEventListener('click', () => renderUIForLanguage('en'));
         elements.startButton.addEventListener('click', startGame);
@@ -358,6 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.jokerSkipBtn.addEventListener('click', useSkipJoker);
         elements.claimRewardBtn.addEventListener('click', handleClaimReward);
         
+        // Statik verileri doldur
         europeanCountries.forEach(country => {
             const option = document.createElement('option');
             option.value = country;
@@ -365,6 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.countrySelect.appendChild(option);
         });
 
+        // Veriyi yükle ve sonra UI'yı çiz
         try {
             await loadQuestions();
             renderUIForLanguage('tr');
