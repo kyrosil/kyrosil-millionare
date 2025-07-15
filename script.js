@@ -43,7 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
         audience: true, fiftyFifty: false,
         double: false, skip: false
     };
-
+    
+    // ---- METİN VE VERİLER ---- //
     const uiTexts = {
         tr: {
             title: "Kyrosil ile Bil Kazan", subtitle: "Supported by Burger King",
@@ -99,42 +100,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const europeanCountries = ["Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Ukraine", "United Kingdom", "Vatican City"];
 
-    // ---- ANA FONKSİYONLAR---- //
-    
-    async function init() {
-        addEventListeners();
-        populateCountries();
-        await loadQuestions();
-        renderUIForLanguage('tr'); // Sayfa ilk yüklendiğinde TÜRKÇE olarak başla
-    }
-    
-    function addEventListeners() {
-        langBtnTr.addEventListener('click', () => renderUIForLanguage('tr'));
-        langBtnEn.addEventListener('click', () => renderUIForLanguage('en'));
-        startButton.addEventListener('click', startGame);
-        restartButton.addEventListener('click', () => location.reload());
-        jokerAudienceBtn.addEventListener('click', useAudienceJoker);
-        jokerFiftyBtn.addEventListener('click', useFiftyFiftyJoker);
-        jokerDoubleBtn.addEventListener('click', useDoubleAnswerJoker);
-        jokerSkipBtn.addEventListener('click', useSkipJoker);
-        claimRewardBtn.addEventListener('click', handleClaimReward);
+    // ---- ANA KONTROL FONKSİYONLARI ---- //
+
+    // 1. SORULARI YÜKLE
+    async function loadQuestions() {
+        try {
+            const response = await fetch('questions.json');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            allQuestions = await response.json();
+        } catch (error) {
+            console.error("Sorular yüklenemedi:", error);
+            // Hata durumunda kullanıcıya bilgi ver
+            document.body.innerHTML = "Oyun verileri yüklenirken bir sorun oluştu. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.";
+        }
     }
 
-    // ---- GÜNCELLENMİŞ ARAYÜZ YENİLEME FONKSİYONU ---- //
+    // 2. DİLİ AYARLA VE TÜM ARAYÜZÜ ÇİZ
     function renderUIForLanguage(lang) {
         currentLanguage = lang;
         const texts = uiTexts[currentLanguage];
 
         // Dil butonlarının aktif durumunu ayarla
-        if (lang === 'tr') {
-            langBtnTr.classList.add('active');
-            langBtnEn.classList.remove('active');
-        } else {
-            langBtnEn.classList.add('active');
-            langBtnTr.classList.remove('active');
-        }
+        langBtnTr.classList.toggle('active', lang === 'tr');
+        langBtnEn.classList.toggle('active', lang === 'en');
 
-        // Tüm metinleri güncelle
+        // Tüm metinleri ve placeholder'ları güncelle
         document.title = texts.title;
         document.querySelectorAll('[data-lang-key]').forEach(el => {
             const key = el.dataset.langKey;
@@ -146,50 +136,59 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Dile özel form elemanlarını ve linkleri ayarla
-        if (currentLanguage === 'en') {
-            countrySelect.classList.remove('hidden');
-            gsmInput.placeholder = texts.gsmEn;
-            consentLabel.innerHTML = texts.consentEn;
-            bkWebsiteLink.href = "https://www.bk.com/";
-        } else {
-            countrySelect.classList.add('hidden');
-            gsmInput.placeholder = texts.gsmTr;
-            consentLabel.innerHTML = texts.consentTr;
-            bkWebsiteLink.href = "https://www.burgerking.com.tr/";
-        }
+        countrySelect.classList.toggle('hidden', lang !== 'en');
+        gsmInput.placeholder = lang === 'tr' ? texts.gsmTr : texts.gsmEn;
+        consentLabel.innerHTML = lang === 'tr' ? texts.consentTr : texts.consentEn;
+        bkWebsiteLink.href = lang === 'tr' ? "https://www.burgerking.com.tr/" : "https://www.bk.com/";
         
-        // En son katılım hakkını kontrol et ve metnini ayarla
+        // Katılım hakkını kontrol et ve metnini ayarla
         checkDailyAttempts();
     }
-
-
-    // ---- GÜNLÜK KATILIM HAKKI MANTIĞI ---- //
+    
+    // 3. GÜNLÜK HAKKI KONTROL ET
     function checkDailyAttempts() {
         const today = new Date().toISOString().slice(0, 10);
-        let attemptsData = JSON.parse(localStorage.getItem('kyrosilQuizData')) || { date: '', count: 0 };
+        let attemptsData = JSON.parse(localStorage.getItem('kyrosilQuizData')) || { date: today, count: 0 };
         if (attemptsData.date !== today) {
             attemptsData = { date: today, count: 0 };
             localStorage.setItem('kyrosilQuizData', JSON.stringify(attemptsData));
         }
         const attemptsLeft = 3 - attemptsData.count;
         attemptsLeftDisplay.textContent = `${uiTexts[currentLanguage].attemptsLeft} ${attemptsLeft}/3`;
+        
+        startButton.disabled = attemptsLeft <= 0;
         if (attemptsLeft <= 0) {
-            startButton.disabled = true;
             startButton.textContent = uiTexts[currentLanguage].noAttempts;
             attemptsLeftDisplay.textContent = uiTexts[currentLanguage].comeback;
         } else {
-            startButton.disabled = false;
             startButton.textContent = uiTexts[currentLanguage].startButton;
         }
     }
+
+    // 4. OYUNU BAŞLAT
+    function startGame() {
+        if (startButton.disabled) return;
+        if (!validateForm()) return;
+        
+        recordAttempt();
+        shuffleAllPools();
+
+        introScreen.classList.remove('active');
+        gameScreen.classList.add('active');
+        
+        resetGameState();
+        loadNextQuestion();
+    }
+    
+    // ---- DİĞER TÜM YARDIMCI FONKSİYONLAR ---- //
     
     function recordAttempt() {
         let attemptsData = JSON.parse(localStorage.getItem('kyrosilQuizData'));
         attemptsData.count++;
         localStorage.setItem('kyrosilQuizData', JSON.stringify(attemptsData));
+        checkDailyAttempts(); // UI'ı hemen güncelle
     }
 
-    // ---- ZAMANLAYICI MANTIĞI ---- //
     function startTimer() {
         clearInterval(timerInterval);
         const level = Math.floor(totalQuestionIndex / 5);
@@ -232,14 +231,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ---- OYUN AKIŞI (GÜNCELLENDİ) ---- //
-    async function loadQuestions() {
-        try {
-            const response = await fetch('questions.json');
-            allQuestions = await response.json();
-        } catch (error) { console.error("Sorular yüklenemedi:", error); }
-    }
-
     function shuffleAllPools() {
         shuffledQuestionPools = {};
         for (const levelKey in allQuestions) {
@@ -248,25 +239,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (pool && Array.isArray(pool)) {
                     shuffledQuestionPools[levelKey] = [...pool].sort(() => Math.random() - 0.5);
                 } else {
-                    console.error(`Error: Soru havuzu bulunamadı veya dizi değil: ${levelKey} - ${currentLanguage}`);
+                    console.error(`Hata: Soru havuzu bulunamadı veya dizi değil: ${levelKey} - ${currentLanguage}`);
                 }
             }
         }
-    }
-
-    function startGame() {
-        if (startButton.disabled) return;
-        if (!validateForm()) return;
-        
-        recordAttempt();
-        checkDailyAttempts();
-        shuffleAllPools();
-
-        introScreen.classList.remove('active');
-        gameScreen.classList.add('active');
-        
-        resetGameState();
-        loadNextQuestion();
     }
 
     function validateForm() {
@@ -308,8 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!shuffledQuestionPools[levelKey] || !shuffledQuestionPools[levelKey][questionInLevelIndex]) {
             console.error("KRİTİK HATA: Bu seviye için soru verisi bulunamadı. Oyunu sonlandır.", {levelKey, questionInLevelIndex, shuffledPools: shuffledQuestionPools});
-            alert("Kritik bir hata oluştu ve oyun devam edemiyor. Lütfen sayfayı yenileyin.");
-            endGame(totalQuestionIndex >= 20); // Eğer son soruya ulaştıysa kazandı say
+            endGame(totalQuestionIndex >= 20);
             return;
         }
 
@@ -509,8 +484,6 @@ document.addEventListener('DOMContentLoaded', () => {
         handleCorrectAnswerFlow();
     }
 
-
-
     function handleClaimReward() {
         const milestone = totalQuestionIndex;
         const prizeMap = { 5: "Whopper Menu", 10: "1000 TL / 20 Euro Balance", 15: "5000 TL / 120 Euro Balance", 20: "20.000 TL / 500 Euro Cash" };
@@ -532,5 +505,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ---- SAYFA YÜKLENDİĞİNDE BAŞLAT ---- //
     init();
 });
