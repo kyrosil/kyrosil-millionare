@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     const App = {
-        // Değişkenler ve sabitler burada tanımlanır
+        // Tüm elementler burada toplanacak
         elements: {},
+        // Tüm oyun durumu burada toplanacak
         state: {
             allQuestions: {},
             shuffledQuestionPools: {},
@@ -14,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             timerInterval: null,
             jokers: { audience: true, fiftyFifty: false, double: false, skip: false }
         },
+        // Tüm metinler burada
         uiTexts: {
             tr: {
                 title: "Kyrosil ile Bil Kazan", subtitle: "Supported by Burger King", rulesTitle: "Oyun Kuralları",
@@ -48,61 +50,73 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         europeanCountries: ["Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Ukraine", "United Kingdom", "Vatican City"],
 
-        // ---- BAŞLATMA FONKSİYONU ---- //
         async init() {
             this.cacheDOMElements();
             this.addEventListeners();
             this.populateCountries();
             try {
                 await this.loadQuestions();
-                this.renderUIForLanguage('tr'); // Başlangıç dili
+                this.renderUIForLanguage('tr');
             } catch (error) {
                 console.error("Initialization failed:", error);
                 document.body.innerHTML = "Oyun başlatılırken kritik bir hata oluştu.";
             }
         },
-        
-        // GÜVENLİK GÜNCELLEMESİ: Elementler sadece ihtiyaç anında bulunur.
+
         cacheDOMElements() {
-            const ids = [
-                'intro-screen', 'game-screen', 'end-screen', 'start-button',
-                'restart-button', 'lang-tr', 'lang-en', 'country-select', 'gsm',
-                'legal-consent', 'attempts-left', 'score', 'timer',
-                'question-counter', 'progress-bar', 'question-text',
-                'answer-buttons', 'result-text', 'claim-reward-btn',
-                'joker-audience', 'joker-fifty', 'joker-double', 'joker-skip',
-                'audience-chart', 'end-title', 'final-score-text'
-            ];
-            ids.forEach(id => {
-                // ID'yi camelCase'e çevir (örn: intro-screen -> introScreen)
-                const camelCaseId = id.replace(/-([a-z])/g, g => g[1].toUpperCase());
-                this.elements[camelCaseId] = document.getElementById(id);
-            });
-            // QuerySelector ile seçilenler
-            this.elements.consentLabel = document.querySelector('label[for="legal-consent"] span');
-            this.elements.bkWebsiteLink = document.querySelector('[data-lang-key="bkWebsite"]');
+            this.elements = {
+                introScreen: document.getElementById('intro-screen'),
+                gameScreen: document.getElementById('game-screen'),
+                endScreen: document.getElementById('end-screen'),
+                startButton: document.getElementById('start-button'),
+                restartButton: document.getElementById('restart-button'),
+                langBtnTr: document.getElementById('lang-tr'),
+                langBtnEn: document.getElementById('lang-en'),
+                countrySelect: document.getElementById('country-select'),
+                gsmInput: document.getElementById('gsm'),
+                legalConsentCheckbox: document.getElementById('legal-consent'),
+                consentLabel: document.querySelector('label[for="legal-consent"] span'),
+                attemptsLeftDisplay: document.getElementById('attempts-left'),
+                scoreDisplay: document.getElementById('score'),
+                timerDisplay: document.getElementById('timer'),
+                questionCounterDisplay: document.getElementById('question-counter'),
+                progressBar: document.getElementById('progress-bar'),
+                questionTextDisplay: document.getElementById('question-text'),
+                answerButtonsContainer: document.getElementById('answer-buttons'),
+                resultTextDisplay: document.getElementById('result-text'),
+                claimRewardBtn: document.getElementById('claim-reward-btn'),
+                jokerAudienceBtn: document.getElementById('joker-audience'),
+                jokerFiftyBtn: document.getElementById('joker-fifty'),
+                jokerDoubleBtn: document.getElementById('joker-double'),
+                jokerSkipBtn: document.getElementById('joker-skip'),
+                audienceChart: document.getElementById('audience-chart'),
+                endTitle: document.getElementById('end-title'),
+                finalScoreText: document.getElementById('final-score-text'),
+                bkWebsiteLink: document.querySelector('[data-lang-key="bkWebsite"]'),
+                firstNameInput: document.getElementById('firstName'),
+                lastNameInput: document.getElementById('lastName'),
+                emailInput: document.getElementById('email'),
+                socialInput: document.getElementById('social'),
+            };
         },
 
         addEventListeners() {
-            // GÜVENLİK GÜNCELLEMESİ: Listener'lar atanmadan önce elementin varlığı kontrol edilir.
-            const addSafeListener = (id, event, handler) => {
-                const element = this.elements[id];
-                if (element) {
-                    element.addEventListener(event, handler);
-                } else {
-                    console.error(`Hata: '${id}' ID'li element bulunamadı.`);
+            // Hata kontrolü için her elementin varlığını kontrol et
+            for (const key in this.elements) {
+                if (this.elements[key] === null) {
+                    console.error(`HATA: '${key}' elementi HTML'de bulunamadı.`);
+                    return; // Eğer bir element bile yoksa devam etme
                 }
-            };
-            
-            addSafeListener('langTr', 'click', () => this.renderUIForLanguage('tr'));
-            addSafeListener('langEn', 'click', () => this.renderUIForLanguage('en'));
-            addSafeListener('startButton', 'click', () => this.startGame());
-            addSafeListener('restartButton', 'click', () => location.reload());
-            addSafeListener('jokerAudienceBtn', 'click', () => this.useAudienceJoker());
-            addSafeListener('jokerFiftyBtn', 'click', () => this.useFiftyFiftyJoker());
-            addSafeListener('jokerDoubleBtn', 'click', () => this.useDoubleAnswerJoker());
-            addSafeListener('jokerSkipBtn', 'click', () => this.useSkipJoker());
-            addSafeListener('claimRewardBtn', 'click', () => this.handleClaimReward());
+            }
+            this.elements.langBtnTr.addEventListener('click', () => this.renderUIForLanguage('tr'));
+            this.elements.langBtnEn.addEventListener('click', () => this.renderUIForLanguage('en'));
+            this.elements.startButton.addEventListener('click', () => this.startGame());
+            this.elements.restartButton.addEventListener('click', () => location.reload());
+            this.elements.jokerAudienceBtn.addEventListener('click', () => this.useAudienceJoker());
+            this.elements.jokerFiftyBtn.addEventListener('click', () => this.useFiftyFiftyJoker());
+            this.elements.jokerDoubleBtn.addEventListener('click', () => this.useDoubleAnswerJoker());
+            this.elements.jokerSkipBtn.addEventListener('click', () => this.useSkipJoker());
+            this.elements.claimRewardBtn.addEventListener('click', () => this.handleClaimReward());
         },
         
         async loadQuestions() {
@@ -123,8 +137,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderUIForLanguage(lang) {
             this.state.currentLanguage = lang;
             const texts = this.uiTexts[this.state.currentLanguage];
-            this.elements.langTr.classList.toggle('active', lang === 'tr');
-            this.elements.langEn.classList.toggle('active', lang === 'en');
+            this.elements.langBtnTr.classList.toggle('active', lang === 'tr');
+            this.elements.langBtnEn.classList.toggle('active', lang === 'en');
             document.title = texts.title;
             document.querySelectorAll('[data-lang-key]').forEach(el => {
                 const key = el.dataset.langKey;
@@ -162,7 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         recordAttempt() {
             const today = new Date().toISOString().slice(0, 10);
-            // GÜVENLİK GÜNCELLEMESİ: Veri okunmadan önce varlığı ve doğruluğu kontrol edilir.
             let attemptsData = JSON.parse(localStorage.getItem('kyrosilQuizData'));
             if (!attemptsData || attemptsData.date !== today) {
                 attemptsData = { date: today, count: 0 };
@@ -183,9 +196,25 @@ document.addEventListener('DOMContentLoaded', () => {
             this.loadNextQuestion();
         },
         
-        // ...Diğer tüm fonksiyonlar aynı mantıkla devam eder...
-        // Sadece global değişkenler yerine `this.elements` ve `this.state` kullanılır.
-        
+        validateForm() {
+            const inputs = [this.elements.firstNameInput, this.elements.lastNameInput, this.elements.emailInput, this.elements.socialInput, this.elements.gsmInput];
+            if (this.state.currentLanguage === 'en' && !this.elements.countrySelect.value) {
+                alert('Please select your country.');
+                return false;
+            }
+            for (let input of inputs) {
+                if (!input.value.trim()) {
+                    alert(this.state.currentLanguage === 'tr' ? 'Lütfen tüm alanları doldurun.' : 'Please fill all fields.');
+                    return false;
+                }
+            }
+            if (!this.elements.legalConsentCheckbox.checked) {
+                alert(this.state.currentLanguage === 'tr' ? 'Lütfen yasal koşulları onaylayın.' : 'Please accept the legal terms.');
+                return false;
+            }
+            return true;
+        },
+
         shuffleAllPools() {
             this.state.shuffledQuestionPools = {};
             for (const levelKey in this.state.allQuestions) {
@@ -197,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         },
-
+        
         resetGameState() {
             this.state.score = 0;
             this.state.totalQuestionIndex = 0;
@@ -221,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.updateHUD();
             this.startTimer();
         },
-
+        
         displayQuestion() {
             const { question, answers } = this.state.currentQuestionData;
             this.elements.questionTextDisplay.textContent = question;
@@ -237,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.elements.answerButtonsContainer.appendChild(button);
             });
         },
-
+        
         selectAnswer(selectedIndex) {
             clearInterval(this.state.timerInterval);
             const isCorrect = selectedIndex === this.state.currentQuestionData.correct;
@@ -259,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (isCorrect) { this.handleCorrectAnswerFlow(); } else { this.endGame(false); }
             }, 2000);
         },
-
+        
         handleSecondAnswer(selectedIndex) {
             const isCorrect = selectedIndex === this.state.currentQuestionData.correct;
             this.revealAnswers(selectedIndex);
@@ -298,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.loadNextQuestion();
             }
         },
-
+        
         updateHUD() {
             const lang = this.state.currentLanguage;
             this.elements.scoreDisplay.textContent = `${this.uiTexts[lang].score}: ${this.state.score}`;
@@ -321,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.elements.jokerDoubleBtn.disabled = !this.state.jokers.double;
             this.elements.jokerSkipBtn.disabled = !this.state.jokers.skip;
         },
-
+        
         startTimer() {
             clearInterval(this.state.timerInterval);
             const level = Math.floor(this.state.totalQuestionIndex / 5);
@@ -348,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }, 1000);
         },
-
+        
         handleTimeUp() {
             this.elements.resultTextDisplay.textContent = this.uiTexts[this.state.currentLanguage].timeUp;
             this.revealAnswers(-1);
@@ -416,8 +445,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const prizeMap = { 5: "Whopper Menu", 10: "1000 TL / 20 Euro Balance", 15: "5000 TL / 120 Euro Balance", 20: "20.000 TL / 500 Euro Cash" };
             const prizeWon = prizeMap[milestone];
             const userData = {
-                firstName: this.elements.firstName.value, lastName: document.getElementById('lastName').value,
-                email: document.getElementById('email').value, social: document.getElementById('social').value,
+                firstName: this.elements.firstNameInput.value, lastName: this.elements.lastNameInput.value,
+                email: this.elements.emailInput.value, social: this.elements.socialInput.value,
                 gsm: this.elements.gsmInput.value, country: this.state.currentLanguage === 'en' ? this.elements.countrySelect.value : 'Turkey'
             };
             const mailBody = `Kyrosil x Burger King Yarışması Ödül Talebi\n------------------------------------------\nUlaşılan Kilometre Taşı: Soru ${milestone}\nKazanılan Ödül: ${prizeWon}\n------------------------------------------\nKullanıcı Bilgileri:\nAd: ${userData.firstName}\nSoyad: ${userData.lastName}\nE-posta: ${userData.email}\nSosyal Medya: ${userData.social}\nÜlke: ${userData.country}\nGSM No: ${userData.gsm}\n------------------------------------------\nTalep Tarihi: ${new Date().toLocaleString()}`;
