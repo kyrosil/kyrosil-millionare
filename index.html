@@ -20,10 +20,11 @@
             <div class="intro-content">
                 <h1 class="title" data-lang-key="title">Kyrosil ile Bil Kazan</h1>
                 <p class="subtitle" data-lang-key="subtitle">Supported by Burger King</p>
+                <p id="attempts-left" class="attempts-notice"></p>
                 
                 <div class="info-section">
                     <h2 data-lang-key="rulesTitle">Oyun Kuralları</h2>
-                    <p data-lang-key="rulesDesc">20 soruluk tarih maratonuna hoş geldiniz! Zorluğu giderek artan soruları doğru yanıtlayın, kilometre taşlarını aşın ve muhteşem ödüller kazanın. 4 farklı joker hakkınız stratejinize güç katacak!</p>
+                    <p data-lang-key="rulesDesc">20 soruluk tarih maratonuna hoş geldiniz! Zorluğu giderek artan soruları ve zaman sınırını aşarak kilometre taşlarına ulaşın, muhteşem ödüller kazanın. 4 farklı joker hakkınız stratejinize güç katacak!</p>
                 </div>
                 
                 <div class="info-section">
@@ -63,6 +64,7 @@
         <div id="game-screen" class="screen">
             <div id="hud">
                 <div id="score">Puan: 0</div>
+                <div id="timer">00:00</div>
                 <div id="question-counter">Soru 1/20</div>
             </div>
              <div id="progress-container">
@@ -89,7 +91,7 @@
         </div>
 
         <div id="end-screen" class="screen">
-            <h2 data-lang-key="congrats">Tebrikler!</h2>
+            <h2 id="end-title" data-lang-key="congrats">Tebrikler!</h2>
             <p id="final-score-text"></p>
             <button id="restart-button" class="btn" data-lang-key="restartButton">Yeniden Başla</button>
         </div>
