@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let shuffledLevelIndices = {};
     let isQuestionActive = false; 
 
+    // YENİ ve DOĞRU: JSON dosyanızdaki yeni seviye isimleri
     const levelKeys = ["seviye1_zor", "seviye2_cok_zor", "seviye3_asiri_zor", "seviye4_uzman"];
     
     let jokers = {
@@ -116,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const europeanCountries = ["Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Ukraine", "United Kingdom", "Vatican City"];
 
+    // ---- ANA FONKSİYONLAR ---- //
     async function init() {
         populateCountries();
         await loadQuestions();
@@ -134,10 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
         jokerSkipBtn.addEventListener('click', useSkipJoker);
         claimRewardBtn.addEventListener('click', handleClaimReward);
         
-        // ---- TEST İÇİN GEÇİCİ OLARAK DEVRE DIŞI BIRAKILDI ---- //
-        // document.addEventListener('visibilitychange', handleVisibilityChange);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
     }
 
+    // ---- GÜNLÜK KATILIM HAKKI MANTIĞI ---- //
     function checkDailyAttempts() {
         const today = new Date().toISOString().slice(0, 10);
         let attemptsData = JSON.parse(localStorage.getItem('kyrosilQuizData')) || { date: '', count: 0 };
@@ -166,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('kyrosilQuizData', JSON.stringify(attemptsData));
     }
 
+    // ---- ZAMANLAYICI MANTIĞI ---- //
     function startTimer() {
         clearInterval(timerInterval);
         
@@ -206,8 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
     
-    // ---- TEST İÇİN GEÇİCİ OLARAK DEVRE DIŞI BIRAKILDI ---- //
-    /*
     function handleVisibilityChange() {
         if (document.hidden && isQuestionActive) {
             clearInterval(timerInterval);
@@ -216,7 +217,6 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => endGame(false), 2000);
         }
     }
-    */
 
     function handleTimeUp() {
         isQuestionActive = false;
@@ -225,6 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => endGame(false), 2000);
     }
 
+    // ---- DİL VE UI ---- //
     function toggleLanguage() {
         currentLanguage = currentLanguage === 'tr' ? 'en' : 'tr';
         updateLanguageUI();
@@ -268,6 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ---- OYUN AKIŞI ---- //
     async function loadQuestions() {
         try {
             const response = await fetch('questions.json');
@@ -476,6 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
         finalScoreText.textContent = `${uiTexts[currentLanguage].finalScore}: ${score}`;
     }
 
+    // ---- JOKER VE ÖDÜL MANTIĞI ---- //
     function updateJokerUI() {
         jokerAudienceBtn.disabled = !jokers.audience;
         jokerFiftyBtn.disabled = !jokers.fiftyFifty;
@@ -578,5 +581,6 @@ document.addEventListener('DOMContentLoaded', () => {
         wrongAnswers[1].classList.add('hidden-by-joker');
     }
 
+    // Oyunu Başlat
     init();
 });
