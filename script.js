@@ -46,8 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentLanguage = 'tr';
     let isDoubleAnswerActive = false;
     let timerInterval;
-    let shuffledLevelIndices = {}; // YENİ: Karıştırılmış soru indekslerini tutar
+    let shuffledLevelIndices = {};
+    let isQuestionActive = false; // YENİ: Anti-hile sistemi için durum değişkeni
 
+    // YENİ: JSON dosyanızdaki yeni seviye isimleri
+    const levelKeys = ["seviye1_zor", "seviye2_cok_zor", "seviye3_asiri_zor", "seviye4_uzman"];
+    
     let jokers = {
         audience: true, fiftyFifty: false,
         double: false, skip: false
@@ -66,12 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
             prize20: "<b>20. Soru:</b> 20.000 TL / 500€ Nakit Ödül!",
             langNotice: "Türkiye'den katılan yarışmacıların <b>Türkçe</b>, Avrupa'dan katılanların ise <b>İngilizce</b> dilini seçmesi ödül kazanımı için zorunludur.",
             firstName: "Adınız", lastName: "Soyadınız", email: "E-posta",
-            social: "Sosyal Medya (Instagram veya EU Portal)", // DEĞİŞTİRİLDİ
+            social: "Sosyal Medya (Instagram veya EU Portal)",
             gsmTr: "Tıkla Gelsin'e Kayıtlı GSM Numaranız",
             consentTr: '<a href="#" target="_blank">KVKK Aydınlatma Metni\'ni</a> okudum, anladım ve kişisel verilerimin işlenmesini onaylıyorum.',
             startButton: "OYUNU BAŞLAT",
             score: "Puan", question: "Soru",
             correct: "Doğru!", wrong: "Yanlış!", timeUp: "Süre Doldu!",
+            cheated: "Sekme Değiştirmek Yasak!",
             jokerAudience: "Seyirci", jokerFifty: "Yarı Yarıya", jokerDouble: "Çift Cevap", jokerSkip: "Pas Geç",
             claimReward: "Ödülünü Al!",
             congrats: "Tebrikler!", finalScore: "Final Puanınız", restartButton: "Yeniden Başla",
@@ -92,12 +97,13 @@ document.addEventListener('DOMContentLoaded', () => {
             prize20: "<b>Question 20:</b> 20,000 TL / 500€ Cash Prize!",
             langNotice: "Participants from Turkey are required to select <b>Turkish</b>, and participants from Europe are required to select the <b>English</b> language to be eligible for prizes.",
             firstName: "First Name", lastName: "Last Name", email: "Email",
-            social: "Social Media (e.g., Instagram or EU Portal)", // DEĞİŞTİRİLDİ
+            social: "Social Media (e.g., Instagram or EU Portal)",
             gsmEn: "GSM Number Registered to Burger King App",
             consentEn: 'I have read and understood the <a href="#" target="_blank">GDPR Policy</a> and I consent to the processing of my personal data.',
             startButton: "START GAME",
             score: "Score", question: "Question",
             correct: "Correct!", wrong: "Wrong!", timeUp: "Time's Up!",
+            cheated: "Switching Tabs is Forbidden!",
             jokerAudience: "Audience", jokerFifty: "50:50", jokerDouble: "Double Answer", jokerSkip: "Skip",
             claimReward: "Claim Your Prize!",
             congrats: "Congratulations!", finalScore: "Your Final Score", restartButton: "Restart Game",
@@ -112,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const europeanCountries = ["Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Ukraine", "United Kingdom", "Vatican City"];
 
     // ---- ANA FONKSİYONLAR ---- //
-
     async function init() {
         populateCountries();
         await loadQuestions();
@@ -130,6 +135,9 @@ document.addEventListener('DOMContentLoaded', () => {
         jokerDoubleBtn.addEventListener('click', useDoubleAnswerJoker);
         jokerSkipBtn.addEventListener('click', useSkipJoker);
         claimRewardBtn.addEventListener('click', handleClaimReward);
+        
+        // YENİ: Anti-hile sistemi için olay dinleyici
+        document.addEventListener('visibilitychange', handleVisibilityChange);
     }
 
     // ---- GÜNLÜK KATILIM HAKKI MANTIĞI ---- //
@@ -161,12 +169,24 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('kyrosilQuizData', JSON.stringify(attemptsData));
     }
 
-    // ---- ZAMANLAYICI MANTIĞI ---- //
+    // ---- ZAMANLAYICI MANTIĞI (GÜNCELLENDİ) ---- //
     function startTimer() {
         clearInterval(timerInterval);
-        const level = Math.floor(totalQuestionIndex / 5);
-        const timeMap = [60, 90, 120, 150];
-        let timeLeft = timeMap[level];
+        
+        // YENİ: Kademeli süre mantığı
+        let timeLeft;
+        const questionNumber = totalQuestionIndex + 1;
+
+        if (questionNumber >= 1 && questionNumber <= 5) {
+            timeLeft = 30; // 1-5. sorular 30sn
+        } else if (questionNumber >= 6 && questionNumber <= 10) {
+            timeLeft = 45; // 6-10. sorular 45sn
+        } else if (questionNumber >= 11 && questionNumber <= 15) {
+            timeLeft = 60; // 11-15. sorular 1dk
+        } else {
+            timeLeft = 90; // 16-20. sorular 1.5dk
+        }
+
         timerDisplay.classList.remove('low-time');
 
         const updateTimerDisplay = () => {
@@ -180,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        updateTimerDisplay();
+        updateTimerDisplay(); // Anında gösterim için
         timerInterval = setInterval(() => {
             timeLeft--;
             updateTimerDisplay();
@@ -190,8 +210,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 1000);
     }
+    
+    // YENİ: Anti-hile fonksiyonu
+    function handleVisibilityChange() {
+        if (document.hidden && isQuestionActive) {
+            clearInterval(timerInterval);
+            resultTextDisplay.textContent = uiTexts[currentLanguage].cheated;
+            revealAnswers(-1); // -1 geçersiz bir indeks olduğu için hiçbir seçeneği 'yanlış seçildi' olarak göstermez.
+            setTimeout(() => endGame(false), 2000);
+        }
+    }
 
     function handleTimeUp() {
+        isQuestionActive = false; // Soru bitti
         resultTextDisplay.textContent = uiTexts[currentLanguage].timeUp;
         revealAnswers(-1);
         setTimeout(() => endGame(false), 2000);
@@ -251,7 +282,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // YENİ: Fisher-Yates shuffle algoritması
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -262,13 +292,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startGame() {
         if (!validateForm()) return;
-
         recordAttempt();
         checkDailyAttempts();
-
         introScreen.classList.remove('active');
         gameScreen.classList.add('active');
-
         resetGameState();
         loadNextQuestion();
     }
@@ -292,15 +319,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function resetGameState() {
         score = 0;
         totalQuestionIndex = 0;
+        isQuestionActive = false;
         jokers = { audience: true, fiftyFifty: false, double: false, skip: false };
         updateJokerUI();
-
-        // YENİ: Her seviye için soru indekslerini karıştır
         shuffledLevelIndices = {};
-        for (const levelKey in allQuestions) {
-            const questionCount = allQuestions[levelKey][currentLanguage].length;
-            const indices = Array.from(Array(questionCount).keys()); // [0, 1, 2, 3, 4]
-            shuffledLevelIndices[levelKey] = shuffleArray(indices);
+        for (const levelKey of levelKeys) { // levelKeys dizisini kullan
+            if (allQuestions[levelKey]) {
+                const questionCount = allQuestions[levelKey][currentLanguage].length;
+                const indices = Array.from(Array(questionCount).keys());
+                shuffledLevelIndices[levelKey] = shuffleArray(indices);
+            }
         }
     }
 
@@ -308,15 +336,15 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(timerInterval);
         claimRewardBtn.classList.add('hidden');
         isDoubleAnswerActive = false;
-
-        const level = Math.floor(totalQuestionIndex / 5) + 1;
+        
+        const levelIndex = Math.floor(totalQuestionIndex / 5);
         const questionInLevelIndex = totalQuestionIndex % 5;
-        const levelKey = `seviye${level}`;
+        const levelKey = levelKeys[levelIndex]; // Dizi üzerinden seviye ismini al
 
-        // YENİ: Karıştırılmış sıradan bir sonraki soruyu al
         const shuffledIndex = shuffledLevelIndices[levelKey]?.[questionInLevelIndex];
 
         if (!allQuestions[levelKey] || shuffledIndex === undefined) {
+            isQuestionActive = false;
             endGame(true);
             return;
         }
@@ -325,8 +353,8 @@ document.addEventListener('DOMContentLoaded', () => {
         displayQuestion();
         updateHUD();
         startTimer();
+        isQuestionActive = true; // Yeni soru başladı
     }
-
 
     function displayQuestion() {
         questionTextDisplay.textContent = currentQuestionData.question;
@@ -345,6 +373,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function selectAnswer(selectedIndex) {
+        if (!isQuestionActive) return; // Eğer soru aktif değilse işlem yapma (çift tıklamayı önler)
+        isQuestionActive = false; // Cevap seçildi, artık soru aktif değil
         clearInterval(timerInterval);
 
         const isCorrect = selectedIndex === currentQuestionData.correct;
@@ -362,6 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const buttons = answerButtonsContainer.querySelectorAll('.answer-btn');
             buttons[selectedIndex].classList.add('wrong');
             buttons[selectedIndex].disabled = true;
+            isQuestionActive = true; // İkinci cevap hakkı için soruyu tekrar aktif et
             return;
         }
 
@@ -436,6 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function endGame(isWinner) {
+        isQuestionActive = false; // Oyun bitti
         clearInterval(timerInterval);
         gameScreen.classList.remove('active');
         endScreen.classList.add('active');
@@ -463,7 +495,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function useSkipJoker() {
-        if (!jokers.skip) return;
+        if (!jokers.skip || !isQuestionActive) return;
+        isQuestionActive = false;
         clearInterval(timerInterval);
         jokers.skip = false;
         updateJokerUI();
@@ -472,6 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleClaimReward() {
+        isQuestionActive = false;
         const milestone = totalQuestionIndex;
         const prizeMap = { 5: "Whopper Menu", 10: "1000 TL / 20 Euro Balance", 15: "5000 TL / 120 Euro Balance", 20: "20.000 TL / 500 Euro Cash" };
         const prizeWon = prizeMap[milestone];
