@@ -47,9 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let isDoubleAnswerActive = false;
     let timerInterval;
     let shuffledLevelIndices = {};
-    let isQuestionActive = false; // YENİ: Anti-hile sistemi için durum değişkeni
+    let isQuestionActive = false; 
 
-    // YENİ: JSON dosyanızdaki yeni seviye isimleri
     const levelKeys = ["seviye1_zor", "seviye2_cok_zor", "seviye3_asiri_zor", "seviye4_uzman"];
     
     let jokers = {
@@ -117,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const europeanCountries = ["Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Ukraine", "United Kingdom", "Vatican City"];
 
-    // ---- ANA FONKSİYONLAR ---- //
     async function init() {
         populateCountries();
         await loadQuestions();
@@ -136,11 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
         jokerSkipBtn.addEventListener('click', useSkipJoker);
         claimRewardBtn.addEventListener('click', handleClaimReward);
         
-        // YENİ: Anti-hile sistemi için olay dinleyici
-        document.addEventListener('visibilitychange', handleVisibilityChange);
+        // ---- TEST İÇİN GEÇİCİ OLARAK DEVRE DIŞI BIRAKILDI ---- //
+        // document.addEventListener('visibilitychange', handleVisibilityChange);
     }
 
-    // ---- GÜNLÜK KATILIM HAKKI MANTIĞI ---- //
     function checkDailyAttempts() {
         const today = new Date().toISOString().slice(0, 10);
         let attemptsData = JSON.parse(localStorage.getItem('kyrosilQuizData')) || { date: '', count: 0 };
@@ -169,22 +166,20 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('kyrosilQuizData', JSON.stringify(attemptsData));
     }
 
-    // ---- ZAMANLAYICI MANTIĞI (GÜNCELLENDİ) ---- //
     function startTimer() {
         clearInterval(timerInterval);
         
-        // YENİ: Kademeli süre mantığı
         let timeLeft;
         const questionNumber = totalQuestionIndex + 1;
 
         if (questionNumber >= 1 && questionNumber <= 5) {
-            timeLeft = 30; // 1-5. sorular 30sn
+            timeLeft = 30;
         } else if (questionNumber >= 6 && questionNumber <= 10) {
-            timeLeft = 45; // 6-10. sorular 45sn
+            timeLeft = 45;
         } else if (questionNumber >= 11 && questionNumber <= 15) {
-            timeLeft = 60; // 11-15. sorular 1dk
+            timeLeft = 60;
         } else {
-            timeLeft = 90; // 16-20. sorular 1.5dk
+            timeLeft = 90;
         }
 
         timerDisplay.classList.remove('low-time');
@@ -200,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        updateTimerDisplay(); // Anında gösterim için
+        updateTimerDisplay();
         timerInterval = setInterval(() => {
             timeLeft--;
             updateTimerDisplay();
@@ -211,24 +206,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
     
-    // YENİ: Anti-hile fonksiyonu
+    // ---- TEST İÇİN GEÇİCİ OLARAK DEVRE DIŞI BIRAKILDI ---- //
+    /*
     function handleVisibilityChange() {
         if (document.hidden && isQuestionActive) {
             clearInterval(timerInterval);
             resultTextDisplay.textContent = uiTexts[currentLanguage].cheated;
-            revealAnswers(-1); // -1 geçersiz bir indeks olduğu için hiçbir seçeneği 'yanlış seçildi' olarak göstermez.
+            revealAnswers(-1);
             setTimeout(() => endGame(false), 2000);
         }
     }
+    */
 
     function handleTimeUp() {
-        isQuestionActive = false; // Soru bitti
+        isQuestionActive = false;
         resultTextDisplay.textContent = uiTexts[currentLanguage].timeUp;
         revealAnswers(-1);
         setTimeout(() => endGame(false), 2000);
     }
 
-    // ---- DİL VE UI ---- //
     function toggleLanguage() {
         currentLanguage = currentLanguage === 'tr' ? 'en' : 'tr';
         updateLanguageUI();
@@ -272,7 +268,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ---- OYUN AKIŞI ---- //
     async function loadQuestions() {
         try {
             const response = await fetch('questions.json');
@@ -323,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
         jokers = { audience: true, fiftyFifty: false, double: false, skip: false };
         updateJokerUI();
         shuffledLevelIndices = {};
-        for (const levelKey of levelKeys) { // levelKeys dizisini kullan
+        for (const levelKey of levelKeys) {
             if (allQuestions[levelKey]) {
                 const questionCount = allQuestions[levelKey][currentLanguage].length;
                 const indices = Array.from(Array(questionCount).keys());
@@ -339,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const levelIndex = Math.floor(totalQuestionIndex / 5);
         const questionInLevelIndex = totalQuestionIndex % 5;
-        const levelKey = levelKeys[levelIndex]; // Dizi üzerinden seviye ismini al
+        const levelKey = levelKeys[levelIndex];
 
         const shuffledIndex = shuffledLevelIndices[levelKey]?.[questionInLevelIndex];
 
@@ -353,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayQuestion();
         updateHUD();
         startTimer();
-        isQuestionActive = true; // Yeni soru başladı
+        isQuestionActive = true;
     }
 
     function displayQuestion() {
@@ -373,8 +368,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function selectAnswer(selectedIndex) {
-        if (!isQuestionActive) return; // Eğer soru aktif değilse işlem yapma (çift tıklamayı önler)
-        isQuestionActive = false; // Cevap seçildi, artık soru aktif değil
+        if (!isQuestionActive) return;
+        isQuestionActive = false;
         clearInterval(timerInterval);
 
         const isCorrect = selectedIndex === currentQuestionData.correct;
@@ -392,7 +387,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const buttons = answerButtonsContainer.querySelectorAll('.answer-btn');
             buttons[selectedIndex].classList.add('wrong');
             buttons[selectedIndex].disabled = true;
-            isQuestionActive = true; // İkinci cevap hakkı için soruyu tekrar aktif et
+            isQuestionActive = true;
             return;
         }
 
@@ -467,7 +462,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function endGame(isWinner) {
-        isQuestionActive = false; // Oyun bitti
+        isQuestionActive = false;
         clearInterval(timerInterval);
         gameScreen.classList.remove('active');
         endScreen.classList.add('active');
@@ -481,7 +476,6 @@ document.addEventListener('DOMContentLoaded', () => {
         finalScoreText.textContent = `${uiTexts[currentLanguage].finalScore}: ${score}`;
     }
 
-    // ---- JOKER VE ÖDÜL MANTIĞI ---- //
     function updateJokerUI() {
         jokerAudienceBtn.disabled = !jokers.audience;
         jokerFiftyBtn.disabled = !jokers.fiftyFifty;
@@ -543,7 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let remainingPercent = 100;
-        let highValue = 40 + Math.floor(Math.random() * 30); // 40-69%
+        let highValue = 40 + Math.floor(Math.random() * 30);
         percentages[highIndex] = highValue;
         remainingPercent -= highValue;
 
@@ -584,6 +578,5 @@ document.addEventListener('DOMContentLoaded', () => {
         wrongAnswers[1].classList.add('hidden-by-joker');
     }
 
-    // Oyunu Başlat
     init();
 });
